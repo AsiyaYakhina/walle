@@ -29,6 +29,9 @@
   <script src="http://cs.wellesley.edu/~cs307/threejs/dirksen/libs/spin.js"></script>
   <script src="http://cs.wellesley.edu/~cs307/threejs/dirksen/libs/ThreeBSP.js"></script>
   <script src="marble.js"></script>
+  <script src="eyeBase.js"></script>
+  <script src="materials.js"></script>
+
 </head>
 <body>
 
@@ -53,145 +56,17 @@
   var size = 2;
   var state = TW.cameraSetup(renderer,scene, {minx:-10,maxx:10,miny:-30,maxy:20,minz:0,maxz:0});
 
+// DELETE LATER
   var material = new THREE.MeshBasicMaterial( { color: 0xffff00 } ); 
   var material2 = new THREE.MeshBasicMaterial({color: 0xDC630A});
 
- var textureEyeCover = new THREE.ImageUtils.loadTexture("darkMetalEye.jpg", 
-    new THREE.UVMapping(),
-    function () {
-      console.log("eyeTexture is loaded.");
-      imageLoaded = true;
-      TW.render();
-    });
+  var eyeBaseR = createEyeBase(1);
+   scene.add(eyeBaseR);
 
-
-
-  textureEyeCover.wrapS = textureEyeCover.wrapT = THREE.MirroredRepeatWrapping;
-  textureEyeCover.repeat.set( 1 / 5, 1 / 5 );
-  textureEyeCover.offset.set( 0.8, 0.9 );
-
-
-  var eyeCoverMaterial = new THREE.MeshPhongMaterial(
-    { color: 0x898989,
-      specular:0xFFFFFF,
-      shininess: 0,
-      map: textureEyeCover,
-      side: THREE.DoubleSide,
-      castShadow: true
-    });
-
-
-
-
-function createEyeBase() { // 1 is right side, -1 is left
-
-  var eyeBase = new THREE.Object3D();
-
- var eye = new THREE.Shape();
-  eye.moveTo(-6, 6);
-  eye.bezierCurveTo(-6,3, -6,1,-2,0);
-  eye.bezierCurveTo(2,0, 2,1,1.5,4);
-  eye.bezierCurveTo(1,4.5,-0.4,5,-6,6);
-
-
-    var textureEye = new THREE.ImageUtils.loadTexture("whiteMetal.jpg", 
-      new THREE.UVMapping(),
-      function () {
-        console.log("eyeTexture is loaded.");
-        imageLoaded = true;
-        TW.render();
-      });
-
-    textureEye.wrapS = textureEye.wrapT = THREE.MirroredRepeatWrapping;
-    textureEye.repeat.set( 1 / 7, 1 / 7 );
-    textureEye.offset.set( 0.8, 0.9 );
-
-
-    var eyeMaterial = new THREE.MeshPhongMaterial(
-      { color: 0x898989,
-        specular:0xFFFFFF,
-        shininess: 0,
-        map: textureEye,
-        receiveShadow: true
-      });
-    var eyeGeom = new THREE.ExtrudeGeometry(eye, {amount: 5,
-    bevelEnabled: false,
-    curveSegments: 12});
-    //eyeGeom.applyMatrix(new THREE.Matrix4().makeTranslation(-20, 0, 0));
-
-    var texturedEye = new THREE.SceneUtils.createMultiMaterialObject(eyeGeom, [eyeMaterial]);
-    eyeBase.add(texturedEye);
-   
-// main eye added
-
-    
-  var backEye = new THREE.Shape();
-  backEye.moveTo(5,5);
-  backEye.lineTo(8,5);
-  backEye.lineTo(8,4.8);
-  backEye.bezierCurveTo(10, 4.5,10, 4.5, 8, 3.8);
-  backEye.bezierCurveTo(8,1, 3,1.8,  5,1.8);
-  backEye.bezierCurveTo(4,1, 3,4,  5,5);
-
-
-
-   var backEyeGeom = new THREE.ExtrudeGeometry(backEye, {amount: 5,
-    bevelEnabled: false,
-    curveSegments: 12});
-   backEyeGeom.applyMatrix(new THREE.Matrix4().makeTranslation(-20, 0, 0));
-   var backEye = new THREE.SceneUtils.createMultiMaterialObject(backEyeGeom, [eyeCoverMaterial]);
-   backEye.scale.x = 1.3;
-   backEye.rotation.z = Math.PI*2 - Math.PI/15;
-   backEye.position.set(15.5,-4.6,-4);
-   eyeBase.add(backEye);
-//backSide added
-
-
-   var surfPoints1 = [ [ [-6.1,6.1,0],  [-6.1,3,0], [-5.9,0.8,0], [-2,-0.2,0] ],
-  [ [-6.1,6.1,2], [-6.1,3,2],  [-5.9,0.8,2], [-2,-0.2,2] ],
-  [ [-6.1,6.1,4], [-6.1,3,4],  [-5.9,0.8,4],  [-2,-0.2,4] ],
-  [ [-6.1,6.1,6],  [-6.1,3,6],  [-5.9,0.8,6],  [-2,-0.2,6] ] ];
-
-
-  var surfPoints2 = [ [ [-2,-0.2,0],  [0,-0.2,0], [2.7,0,0], [1.7,4,0] ],
-  [ [-2,-0.2,2], [0,-0.2,2],  [2.7,0,2], [1.7,4,2] ],
-  [ [-2,-0.2,4], [0,-0.2,4],  [2.7,0,4],  [1.7,4,4] ],
-  [ [-2,-0.2,6],  [0,-0.2,6],  [2.7,0,6],  [1.7,4,6] ] ];
-
-  var surfPoints3 = [ [ [1.7,4,0],  [0.5,5,0], [-3,5.4,0], [-6.1,6.1,0] ],
-  [ [1.7,4,2], [0.5,5,2],  [-3,5.4,2], [-6.1,6.1,2] ],
-  [ [1.7,4,4], [0.5,5,4],  [-3,5.4,4],  [-6.1,6.1,4] ],
-  [ [1.7,4,6],  [0.5,5,6],  [-3,5.4,6],  [-6.1,6.1,6] ] ];
-
-
-  var surfGeom1 = new THREE.BezierSurfaceGeometry( surfPoints1.reverse(), 60, 60 );
-  surfGeom2 = new THREE.BezierSurfaceGeometry(surfPoints2.reverse(), 60,60);
-  surfGeom3 = new THREE.BezierSurfaceGeometry(surfPoints3.reverse(), 60,60);
-
-  // var eyeCoverGeom = new THREE.ExtrudeGeometry(eye, options);
-  // eyeCoverGeom.applyMatrix(new THREE.Matrix4().makeTranslation(-20, 0, 0));
-
-  var eyeCov1 = new THREE.SceneUtils.createMultiMaterialObject(surfGeom1, [eyeCoverMaterial]);
-
-  var eyeCov2 = new THREE.SceneUtils.createMultiMaterialObject(surfGeom2, [eyeCoverMaterial]);
-
-  var eyeCov3 = new THREE.SceneUtils.createMultiMaterialObject(surfGeom3, [eyeCoverMaterial]);
-
-
-eyeBase.add(eyeCov1);
-
-eyeBase.add(eyeCov2);
-eyeBase.add(eyeCov3);
-
-
- return eyeBase;
-  }
-
-  var eyeBase = createEyeBase();
-
+   var eyeBaseL = createEyeBase(-1);
+   scene.add(eyeBaseL);
 
    
-   scene.add(eyeBase);
 
 
 
