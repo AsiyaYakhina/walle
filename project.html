@@ -31,6 +31,7 @@
   <script src="marble.js"></script>
   <script src="eyeBase.js"></script>
   <script src="materials.js"></script>
+  <script src="createHandwFaces.js"></script>
 
 </head>
 <body>
@@ -157,27 +158,27 @@ head.position.y = -1;
 scene.add(head);
 
 
-  function createNeck() {
+function createNeck() {
 
-    var wholeNeck = new THREE.Object3D();  
+  var wholeNeck = new THREE.Object3D();  
 
-      var neck = new THREE.Shape();
-    neck.moveTo(0,0);
-    neck.lineTo(2,-1)
-    neck.lineTo(2,-4);
-    neck.lineTo(1,-6);
-    neck.lineTo(0.5,-5);
-    neck.lineTo(0.5, -3);
-    neck.lineTo(0,-2);
-    neck.moveTo(0,0);  
+  var neck = new THREE.Shape();
+  neck.moveTo(0,0);
+  neck.lineTo(2,-1)
+  neck.lineTo(2,-4);
+  neck.lineTo(1,-6);
+  neck.lineTo(0.5,-5);
+  neck.lineTo(0.5, -3);
+  neck.lineTo(0,-2);
+  neck.moveTo(0,0);  
 
   var neckGeom = new THREE.ExtrudeGeometry(neck, { amount: 2,
-      bevelThickness: 0,
-      bevelSize: 0,
-      bevelSegments: 3,
-      bevelEnabled: false,
-      curveSegments: 12,
-      steps: 1});
+    bevelThickness: 0,
+    bevelSize: 0,
+    bevelSegments: 3,
+    bevelEnabled: false,
+    curveSegments: 12,
+    steps: 1});
   // var neckDetail = new THREE.SceneUtils.createMultiMaterialObject(neckGeom, [yellowMaterial]);
   var neckDetail = new THREE.Mesh(neckGeom, yellowMaterial);
   neckDetail.rotation.y = 2*Math.PI-Math.PI/2;
@@ -216,18 +217,18 @@ scene.add(head);
 
 
 
- 
-   var textureYellowDetail = new THREE.ImageUtils.loadTexture("yellowDetail.jpg", 
-      new THREE.UVMapping(),
-      function () {
-        console.log("yellowDetail is loaded.");
-        imageLoaded = true;
-        TW.render();
-      });
+
+  var textureYellowDetail = new THREE.ImageUtils.loadTexture("yellowDetail.jpg", 
+    new THREE.UVMapping(),
+    function () {
+      console.log("yellowDetail is loaded.");
+      imageLoaded = true;
+      TW.render();
+    });
 
 
 
-    textureYellowDetail.wrapS = textureYellowDetail.wrapT = THREE.MirroredRepeatWrapping;
+  textureYellowDetail.wrapS = textureYellowDetail.wrapT = THREE.MirroredRepeatWrapping;
   // textureYellowDetail.repeat.set( 1 / 10, 1 / 10 );
   // textureYellowDetail.offset.set( 0.8, 0.9 );
 
@@ -239,13 +240,13 @@ scene.add(head);
       map: textureYellowDetail,
       castShadow: true
     });
- 
+
 
 
   topBoxGeom = new THREE.BoxGeometry(1.4,2.2,0.3);
   addTextureCoords(headGeom, 3, 3);
   topBox = new THREE.Mesh (topBoxGeom, yellowDetailMat);
-   topBox.rotation.x = 2*Math.PI-Math.PI/6;
+  topBox.rotation.x = 2*Math.PI-Math.PI/6;
   topBox.position.set(1,-2.8,3.6);
 
   wholeNeck.add(bodyCyl);
@@ -263,17 +264,17 @@ wholeNeck.position.set(0,0.7,-1);
 scene.add(wholeNeck);
 
 var textureWheel = new THREE.ImageUtils.loadTexture("wheel.jpg", 
-    new THREE.UVMapping(),
-    function () {
-      console.log("eyeTexture is loaded.");
-      imageLoaded = true;
-      TW.render();
-    });
+  new THREE.UVMapping(),
+  function () {
+    console.log("eyeTexture is loaded.");
+    imageLoaded = true;
+    TW.render();
+  });
 
 
 
-  textureWheel.wrapS = textureWheel.wrapT = THREE.MirroredRepeatWrapping;
-    textureWheel.repeat.set( 3, 1);
+textureWheel.wrapS = textureWheel.wrapT = THREE.MirroredRepeatWrapping;
+textureWheel.repeat.set( 3, 1);
   // textureWheel.offset.set( 0.8, 0.9 );
 
 
@@ -287,38 +288,38 @@ var textureWheel = new THREE.ImageUtils.loadTexture("wheel.jpg",
     });
 
 
-function createWheel () {
+  function createWheel () {
 
-var wheel = new THREE.Object3D();
-  var surfPoints1 = [[ [ -2,7,0],  [-2,7,2], [-2,4,6], [-2,2,6] ],
-                      [ [-1,7,0], [-1,7,2],  [-1,4,6], [-1,2,6] ],
-                      [ [0,7,0], [0,7,2],  [0,4,6],  [0,2,6] ],
-                      [ [2,7,0],  [2,7,2],  [2,4,6],  [2,2,6] ] ];
-
-
-
-  var surfPoints2 = [ [ [-2,2,6],  [-2,0,6], [-2,0,-6], [-2,2,-6] ],
-                    [ [-1,2,6], [-1,0,6],  [-1,0,-6], [-1,2,-6] ],
-                    [ [0,2,6], [0,0,6],  [0,0,-6],  [0,2,-6] ],
-                    [ [2,2,6],  [2,0,6],  [2,0,-6],  [2,2,-6] ] ];
+    var wheel = new THREE.Object3D();
+    var surfPoints1 = [[ [ -2,7,0],  [-2,7,2], [-2,4,6], [-2,2,6] ],
+    [ [-1,7,0], [-1,7,2],  [-1,4,6], [-1,2,6] ],
+    [ [0,7,0], [0,7,2],  [0,4,6],  [0,2,6] ],
+    [ [2,7,0],  [2,7,2],  [2,4,6],  [2,2,6] ] ];
 
 
 
-   var surfGeom1 = new THREE.BezierSurfaceGeometry( surfPoints1.reverse(), 60, 60 );
-  var surfGeom2 = new THREE.BezierSurfaceGeometry(surfPoints2.reverse(), 60,60);
-  
-  var eyeCov1 = new THREE.SceneUtils.createMultiMaterialObject(surfGeom1, [wheelMaterial]);
+    var surfPoints2 = [ [ [-2,2,6],  [-2,0,6], [-2,0,-6], [-2,2,-6] ],
+    [ [-1,2,6], [-1,0,6],  [-1,0,-6], [-1,2,-6] ],
+    [ [0,2,6], [0,0,6],  [0,0,-6],  [0,2,-6] ],
+    [ [2,2,6],  [2,0,6],  [2,0,-6],  [2,2,-6] ] ];
 
-   var eyeCov2 = new THREE.SceneUtils.createMultiMaterialObject(surfGeom2, [wheelMaterial]);
 
-var curve3 = eyeCov1.clone();
-curve3.rotation.y= Math.PI;
-wheel.add(eyeCov1);
-wheel.add(eyeCov2);
-wheel.add(curve3);
 
-return wheel;
-}
+    var surfGeom1 = new THREE.BezierSurfaceGeometry( surfPoints1.reverse(), 60, 60 );
+    var surfGeom2 = new THREE.BezierSurfaceGeometry(surfPoints2.reverse(), 60,60);
+
+    var eyeCov1 = new THREE.SceneUtils.createMultiMaterialObject(surfGeom1, [wheelMaterial]);
+
+    var eyeCov2 = new THREE.SceneUtils.createMultiMaterialObject(surfGeom2, [wheelMaterial]);
+
+    var curve3 = eyeCov1.clone();
+    curve3.rotation.y= Math.PI;
+    wheel.add(eyeCov1);
+    wheel.add(eyeCov2);
+    wheel.add(curve3);
+
+    return wheel;
+  }
 
 var wheelL = createWheel();
 wheelL.position.set(-7,-22,0)
@@ -359,7 +360,7 @@ function addTextureCoords(boxGeom, maxT, maxS) {
     var armStart = new THREE.Mesh(armStartGeom, material2);
     var armStart2 = new THREE.Mesh(armStartGeom, material2);
 
- 
+
 
     var bodyCover = new THREE.Shape();
     bodyCover.moveTo(0,0);
@@ -369,7 +370,7 @@ function addTextureCoords(boxGeom, maxT, maxS) {
     bodyCover.lineTo(12.7, -0.4);
     bodyCover.lineTo(0,-0.4);
 
-  
+
 
     var arm = new THREE.Shape();
     arm.moveTo(1.4,-0.31);
@@ -393,12 +394,12 @@ function addTextureCoords(boxGeom, maxT, maxS) {
     neckPoints2.push(new THREE.Vector3(-0.8, -1.75,0));
     neckPoints2.push(new THREE.Vector3(0, -2,0));
 
-   
+
     var bodyBoxGeom = new THREE.BoxGeometry(12,10,12);
-     addTextureCoords(bodyBoxGeom, 5, 5);
+    addTextureCoords(bodyBoxGeom, 5, 5);
     var bodyBox = new THREE.Mesh(bodyBoxGeom, yellowMaterial);
 
-  
+
     var options = {
       amount: 5,
       bevelThickness: 0,
@@ -438,16 +439,16 @@ function addTextureCoords(boxGeom, maxT, maxS) {
       steps: 1
     };
 
-  
 
 
 
-  var bodyTop = createMesh(new THREE.ExtrudeGeometry(bodyCover, options3));
+
+    var bodyTop = createMesh(new THREE.ExtrudeGeometry(bodyCover, options3));
 
 
-  function modifyTextureParams(geometry, numX, numY) {
-    var f, faces = geometry.faces, len = faces.length;
-    var UVs = geometry.faceVertexUvs[0];
+    function modifyTextureParams(geometry, numX, numY) {
+      var f, faces = geometry.faces, len = faces.length;
+      var UVs = geometry.faceVertexUvs[0];
       // var back = new THREE.Vector3(0,0,-1);
       for( f=0; f < len; f++ ) {
             // console.log("modifying face "+f);
@@ -523,31 +524,31 @@ function addTextureCoords(boxGeom, maxT, maxS) {
   bodyTop.rotation.y = Math.PI/2;
   bodyTop.position.set(-6,-8.7,-13.2);
 
- 
- 
- 
 
 
-function createHand() {
-  var wholeHand = new THREE.Object3D();
-  var handArm = new THREE.Object3D();
 
- addTextureCoords(headGeom, 1, 1);
+
+
+  function createHand() {
+    var wholeHand = new THREE.Object3D();
+    var handArm = new THREE.Object3D();
+
+    addTextureCoords(headGeom, 1, 1);
 
     var sholderGeom = new THREE.CylinderGeometry(0.7,0.7,2,5,32);
     var sholder = new THREE.Mesh(sholderGeom, material2);
-  
+
     // var handGeom = new THREE.BoxGeometry(1.4,1.6);
     //   addTextureCoords(handGeom, 1.5, 1.5);
     // var hand = new THREE.Mesh(handGeom, handMaterial);
-   
+
     var wristGeom = new THREE.CylinderGeometry(0.4,0.4,3, 32);
     var wrist = new THREE.Mesh(wristGeom, material);
 
-      var armFirst = createMesh(new THREE.ExtrudeGeometry(arm,options4));
-  var armSecond = createMesh(new THREE.ExtrudeGeometry(arm,options4));
+    var armFirst = createMesh(new THREE.ExtrudeGeometry(arm,options4));
+    var armSecond = createMesh(new THREE.ExtrudeGeometry(arm,options4));
 
-  sholder.position.set(0,0,0);
+    sholder.position.set(0,0,0);
   // hand.position.set(0,0,5.8);
   // hand.rotation.z = Math.PI/2;
   wrist.position.set(0,0,11);
@@ -569,54 +570,59 @@ function createHand() {
   handArm.rotation.z =Math.PI*2- Math.PI/2;
 
 
-  wholeHand.add(sholder);
+  var handFaces = createHandwFaces(1.4,2,6);
+  var hand = createTexturedHand(handFaces);
   wholeHand.add(hand);
+
+  wholeHand.add(sholder);
+
   wholeHand.add(handArm);
   wholeHand.position.set(7.4,-11.5,0);
   wholeHand.rotation.x= Math.PI*2 - Math.PI/6;
 
-return wholeHand;
+  return wholeHand;
 }
 
-var handGeom = new THREE.BoxGeometry(1.4,1.6);
-      addTextureCoords(handGeom, 1.5, 1.5);
-    var hand2 = new THREE.Mesh(handGeom, material);
-    hand2.position.set(0,0,5.8);
-  hand2.rotation.z = Math.PI/2;
-   scene.add(hand2);
-var hand = createHand();
-scene.add(hand);
+ var hand = createHand();
+ scene.add(hand);
 
- 
+
 
    // creating an array of materials to feed to the barn geometry
-    var mats = new THREE.MeshFaceMaterial(
+   var mats = new THREE.MeshFaceMaterial(
 
-      [ yellowMaterial,
-        handMaterial]);
-  
+    [ yellowMaterial,
+    handMaterial]);
 
-function createTexturedHand (handGeom) {
+   function createTexturedHand (handGeom) {
     //setting material indexes for the faces
 
     //putting the brick texture on the front and the back of the barn
-    for (i = 0; i<10; i++) {
+    for (i = 0; i<6; i++) {
       handGeom.faces[i].materialIndex = 0;
     }
-    // putting the roof texture on the roof faces
-   
+
+
      // putting the brick texture on the side wall faces and floor face
-    for (i = 10; i<12; i++) {
+     for (i = 6; i<8; i++) {
       handGeom.faces[i].materialIndex = 1;
+    }
+    for (i = 8; i<11; i++) {
+      handGeom.faces[i].materialIndex = 0;
     }
 
     //sets all the texture params
     addTextureCoords(handGeom, 1.4, 1.6);
 
     var hand = new THREE.Mesh(handGeom, mats);
- return hand;
+    return hand;
   }
-  
+var handFaces = createHandwFaces(1.4,2,6);
+var yayHand = createTexturedHand(handFaces);
+yayHand.position.set(0,7,0);
+scene.add(yayHand);
+
+
 
   ambLight= new THREE.AmbientLight( 0xA8A8A8, 0.1);
 

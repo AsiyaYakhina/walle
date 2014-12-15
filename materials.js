@@ -162,7 +162,7 @@ var textureHand = new THREE.ImageUtils.loadTexture("handText2.jpg",
 
 
   textureHand.wrapS = textureHand.wrapT =THREE.RepeatWrapping;
-  textureHand.repeat.set( 1/10, 1/2);
+  textureHand.repeat.set( 1/2, 1/3);
   // textureWheel.offset.set( 0.8, 0.9 );
 
 
