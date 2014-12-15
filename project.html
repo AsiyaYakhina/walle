@@ -157,10 +157,11 @@ head.position.y = -1;
 scene.add(head);
 
 
+  function createNeck() {
 
-function createTexturedNeck(){
+    var wholeNeck = new THREE.Object3D();  
 
-     var neck = new THREE.Shape();
+      var neck = new THREE.Shape();
     neck.moveTo(0,0);
     neck.lineTo(2,-1)
     neck.lineTo(2,-4);
@@ -168,59 +169,21 @@ function createTexturedNeck(){
     neck.lineTo(0.5,-5);
     neck.lineTo(0.5, -3);
     neck.lineTo(0,-2);
-    neck.moveTo(0,0);
+    neck.moveTo(0,0);  
 
-        var options2 = {
-      amount: 2,
+  var neckGeom = new THREE.ExtrudeGeometry(neck, { amount: 2,
       bevelThickness: 0,
       bevelSize: 0,
       bevelSegments: 3,
       bevelEnabled: false,
       curveSegments: 12,
-      steps: 1
-    };
-
-  var yellowTexture = new THREE.ImageUtils.loadTexture("yellowMetal.jpg", 
-    new THREE.UVMapping(),
-    function () {
-      console.log("yellowTexture is loaded.");
-      imageLoaded = true;
-      TW.render();
-    });
-  yellowTexture.wrapS = yellowTexture.wrapT = THREE.MirroredRepeatWrapping;
-  yellowTexture.repeat.set( 1 / 7, 1 / 7 );
-  yellowTexture.offset.set( 0.8, 0.9 );
-  var yellowMaterial = new THREE.MeshPhongMaterial(
-    { color: 0x898989,
-      specular:0xFFFFFF,
-      shininess: 0,
-      map: yellowTexture,
-      receiveShadow: true
-    });
-
-  var neckGeom = new THREE.ExtrudeGeometry(neck, options2);
-   // neckGeom.applyMatrix(new THREE.Matrix4().makeTranslation(-20, 0, 0));
-   var texturedNeck = new THREE.SceneUtils.createMultiMaterialObject(neckGeom, [yellowMaterial]);
-   return texturedNeck;
- }
-
- var neckDetail = createTexturedNeck();
-  // neckDetail.rotation.y = 2*Math.PI-Math.PI/2;
-  // neckDetail.rotation.x =2*Math.PI- Math.PI/6;
-  // neckDetail.position.set(2,8.5,18);
-  scene.add(neckDetail);
-
-  function createNeck() {
-
-    var wholeNeck = new THREE.Object3D();    
-
-  // var neckGeom = new THREE.ExtrudeGeometry(neck, options2);
-  // // var neckDetail = new THREE.SceneUtils.createMultiMaterialObject(neckGeom, [yellowMaterial]);
-  // var neckDetail = new THREE.Mesh(neckGeom, yellowMaterial);
-  // neckDetail.rotation.y = 2*Math.PI-Math.PI/2;
-  // neckDetail.rotation.x =2*Math.PI- Math.PI/6;
-  // neckDetail.position.set(2,-1.5,0.5);
-  // wholeNeck.add(neckDetail);
+      steps: 1});
+  // var neckDetail = new THREE.SceneUtils.createMultiMaterialObject(neckGeom, [yellowMaterial]);
+  var neckDetail = new THREE.Mesh(neckGeom, yellowMaterial);
+  neckDetail.rotation.y = 2*Math.PI-Math.PI/2;
+  neckDetail.rotation.x =2*Math.PI- Math.PI/6;
+  neckDetail.position.set(2,-1.5,0.5);
+  wholeNeck.add(neckDetail);
 
   var bodyCylGeom = new THREE.CylinderGeometry(1, 1, 2.5, 32 );
   var bodyCyl = new THREE.Mesh(bodyCylGeom, yellowMaterialForCyl );
@@ -250,16 +213,53 @@ function createTexturedNeck(){
   neckHolder2.rotation.z=Math.PI/2;
   neckHolder1.position.set(-0.6,-9.2,1);
   neckHolder2.position.set(2.5, -9.2,1);
+
+
+
+ 
+   var textureYellowDetail = new THREE.ImageUtils.loadTexture("yellowDetail.jpg", 
+      new THREE.UVMapping(),
+      function () {
+        console.log("yellowDetail is loaded.");
+        imageLoaded = true;
+        TW.render();
+      });
+
+
+
+    textureYellowDetail.wrapS = textureYellowDetail.wrapT = THREE.MirroredRepeatWrapping;
+  // textureYellowDetail.repeat.set( 1 / 10, 1 / 10 );
+  // textureYellowDetail.offset.set( 0.8, 0.9 );
+
+
+  var yellowDetailMat = new THREE.MeshPhongMaterial(
+    { color: 0x898989,
+      specular:0xFFFFFF,
+      shininess: 0,
+      map: textureYellowDetail,
+      castShadow: true
+    });
+ 
+
+
+  topBoxGeom = new THREE.BoxGeometry(1.4,2.2,0.3);
+  addTextureCoords(headGeom, 3, 3);
+  topBox = new THREE.Mesh (topBoxGeom, yellowDetailMat);
+   topBox.rotation.x = 2*Math.PI-Math.PI/6;
+  topBox.position.set(1,-2.8,3.6);
+
   wholeNeck.add(bodyCyl);
   wholeNeck.add(bodyDisc);
   wholeNeck.add(neckBase);
   wholeNeck.add(neckHolder1);
   wholeNeck.add(neckHolder2);
+  wholeNeck.add(topBox);
 
   return wholeNeck;
 }
 
 wholeNeck = createNeck();
+wholeNeck.position.set(0,0.7,-1);
 scene.add(wholeNeck);
 
 
@@ -399,35 +399,7 @@ function addTextureCoords(boxGeom, maxT, maxS) {
       steps: 1
     };
 
-    var textureYellowDetail = new THREE.ImageUtils.loadTexture("yellowDetail.jpg", 
-      new THREE.UVMapping(),
-      function () {
-        console.log("yellowDetail is loaded.");
-        imageLoaded = true;
-        TW.render();
-      });
-
-
-
-    textureYellowDetail.wrapS = textureYellowDetail.wrapT = THREE.MirroredRepeatWrapping;
-  // textureYellowDetail.repeat.set( 1 / 10, 1 / 10 );
-  // textureYellowDetail.offset.set( 0.8, 0.9 );
-
-
-  var yellowDetailMat = new THREE.MeshPhongMaterial(
-    { color: 0x898989,
-      specular:0xFFFFFF,
-      shininess: 0,
-      map: textureYellowDetail,
-      castShadow: true
-    });
-
-
-
-  topBoxGeom = new THREE.BoxGeometry(1.4,2.2,0.3);
-  addTextureCoords(headGeom, 3, 3);
-  topBox = new THREE.Mesh (topBoxGeom, yellowDetailMat);
-
+  
 
 
 
@@ -517,8 +489,7 @@ function addTextureCoords(boxGeom, maxT, maxS) {
   //eyeBallTwo.position.set(4.1, 1.2,5);
 
 
-  topBox.rotation.x = 2*Math.PI-Math.PI/6;
-  topBox.position.set(1,-2.8,3.6);
+ 
   wireOne.position.set(1.5,-0.5,3.5);
   wireTwo.position.set(0.6,-0.5,3.5);
 
@@ -612,14 +583,6 @@ function addTextureCoords(boxGeom, maxT, maxS) {
   scene.add(ambLight);
   scene.add(sptLight);
   scene.add(dirLight);
-
-
-
-
-  scene.add(topBox);
-  // scene.add(wireOne);
-  // scene.add(wireTwo);
-  
 
   scene.add(bodyBox);
   scene.add(bodyTop);

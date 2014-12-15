@@ -122,7 +122,30 @@ var textureEye = new THREE.ImageUtils.loadTexture("whiteMetal.jpg",
         receiveShadow: true
       });
  
+   var textureYellowDetail = new THREE.ImageUtils.loadTexture("yellowDetail.jpg", 
+      new THREE.UVMapping(),
+      function () {
+        console.log("yellowDetail is loaded.");
+        imageLoaded = true;
+        TW.render();
+      });
+
+
+
+    textureYellowDetail.wrapS = textureYellowDetail.wrapT = THREE.MirroredRepeatWrapping;
+  // textureYellowDetail.repeat.set( 1 / 10, 1 / 10 );
+  // textureYellowDetail.offset.set( 0.8, 0.9 );
+
+
+  var yellowDetailMat = new THREE.MeshPhongMaterial(
+    { color: 0x898989,
+      specular:0xFFFFFF,
+      shininess: 0,
+      map: textureYellowDetail,
+      castShadow: true
+    });
  
+
 
   // var yellowRustTexture = new THREE.ImageUtils.loadTexture("rustyYello.jpg", 
   //     new THREE.UVMapping(),
