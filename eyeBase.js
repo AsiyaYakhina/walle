@@ -15,8 +15,7 @@ function createEyeBase(side) { // 1 is right side, -1 is left
     var eyeGeom = new THREE.ExtrudeGeometry(eye, {amount: 5,
     bevelEnabled: false,
     curveSegments: 12});
-    //eyeGeom.applyMatrix(new THREE.Matrix4().makeTranslation(-20, 0, 0));
-
+   
     var texturedEye = new THREE.SceneUtils.createMultiMaterialObject(eyeGeom, [eyeMaterial]);
     if (side == -1) {
       texturedEye.rotation.y = Math.PI;
@@ -38,19 +37,20 @@ function createEyeBase(side) { // 1 is right side, -1 is left
 
    var backEyeGeom = new THREE.ExtrudeGeometry(backEye, {amount: 5,
     bevelEnabled: false,
-    curveSegments: 12});
-   backEyeGeom.applyMatrix(new THREE.Matrix4().makeTranslation(-20, 0, 0));
+    curveSegments: 12});  
    var backEye = new THREE.SceneUtils.createMultiMaterialObject(backEyeGeom, [eyeCoverMaterial]);
     if (side == -1) {
+      console.log("SIDE-1");
   backEye.rotation.y= Math.PI;
-   backEye.position.set(-15.5,-4.6,-3);
+   backEye.position.set(10,2,-3);
+}
+
+if (side ==1) {
+  console.log("SIDE 1");
+  backEye.position.set(-9.7,2,-3);
 }
    backEye.scale.x = 1.3;
    backEye.rotation.z = Math.PI*2 - Math.PI/15;
-   if (side==1) {
-   backEye.position.set(15.5,-4.6,-4);
- 
-}
  
   eyeBase.add(backEye);
 //backSide added
@@ -73,15 +73,15 @@ function createEyeBase(side) { // 1 is right side, -1 is left
   [ [1.7,4,6],  [0.5,5,6],  [-3,5.4,6],  [-6.1,6.1,6] ] ];
 
 
-  // var surfGeom1 = new THREE.BezierSurfaceGeometry( surfPoints1.reverse(), 60, 60 );
-  // var surfGeom2 = new THREE.BezierSurfaceGeometry(surfPoints2.reverse(), 60,60);
-  // var surfGeom3 = new THREE.BezierSurfaceGeometry(surfPoints3.reverse(), 60,60);
+//   var surfGeom1 = new THREE.BezierSurfaceGeometry( surfPoints1.reverse(), 60, 60 );
+//   var surfGeom2 = new THREE.BezierSurfaceGeometry(surfPoints2.reverse(), 60,60);
+//   var surfGeom3 = new THREE.BezierSurfaceGeometry(surfPoints3.reverse(), 60,60);
 
-  // var eyeCov1 = new THREE.SceneUtils.createMultiMaterialObject(surfGeom1, [eyeCoverMaterial]);
+//   var eyeCov1 = new THREE.SceneUtils.createMultiMaterialObject(surfGeom1, [eyeCoverMaterial]);
 
-  // var eyeCov2 = new THREE.SceneUtils.createMultiMaterialObject(surfGeom2, [eyeCoverMaterial]);
+//   var eyeCov2 = new THREE.SceneUtils.createMultiMaterialObject(surfGeom2, [eyeCoverMaterial]);
 
-  // var eyeCov3 = new THREE.SceneUtils.createMultiMaterialObject(surfGeom3, [eyeCoverMaterial]);
+//   var eyeCov3 = new THREE.SceneUtils.createMultiMaterialObject(surfGeom3, [eyeCoverMaterial]);
 
 // if (side == -1) {
 //   eyeCov1.rotation.y= Math.PI;
@@ -93,9 +93,9 @@ function createEyeBase(side) { // 1 is right side, -1 is left
 
 //   console.log("SIDE -1");
 //  }
-//eyeBase.add(eyeCov1);
-//eyeBase.add(eyeCov2);
-//eyeBase.add(eyeCov3);
+// eyeBase.add(eyeCov1);
+// eyeBase.add(eyeCov2);
+// eyeBase.add(eyeCov3);
 
 
  return eyeBase;

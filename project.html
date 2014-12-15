@@ -57,181 +57,221 @@
   var state = TW.cameraSetup(renderer,scene, {minx:-10,maxx:10,miny:-30,maxy:20,minz:0,maxz:0});
 
 // DELETE LATER
-  var material = new THREE.MeshBasicMaterial( { color: 0xffff00 } ); 
-  var material2 = new THREE.MeshBasicMaterial({color: 0xDC630A});
-
-  var eyeBaseR = createEyeBase(1);
-   scene.add(eyeBaseR);
-
-   var eyeBaseL = createEyeBase(-1);
-   scene.add(eyeBaseL);
-
-   
+var material = new THREE.MeshBasicMaterial( { color: 0xffff00 } ); 
+var material2 = new THREE.MeshBasicMaterial({color: 0xDC630A});
 
 
 
-   
+function createEyeFront(glassEye, glassCam) {
+  var eyeFront = new THREE.Object3D();
+
+
+  glassEye.scale.z = 0.7;
+
+
+  var eyeBigCircGeom = new THREE.TorusGeometry( 1.9, 0.1, 16, 100 ); 
+  var eyeBigCirc = new THREE.Mesh( eyeBigCircGeom,steelMaterial );
+  eyeBigCirc.position.set(-2.5, 0.8,5 );
+
+  var eyeBorderGeom = new THREE.TorusGeometry(1, 0.1, 16, 100);
+  var eyeBorder = new THREE.Mesh(eyeBorderGeom, steelMaterial);
+  eyeBorder.position.set(-2.5,1,5.1);
+
+
+  var eyeLightPartGeom = new THREE.CircleGeometry(1,100);
+  eyeLightPart = new THREE.Mesh(eyeLightPartGeom, eyeLightMaterial);
+  eyeLightPart.position.set(-2.5,1,5.1);
+  // scene.add(eyeLightPart);
+
+
+  var eyeDarkPartGeom = new THREE.CircleGeometry(1.9,100);
+  var eyeDarkPart = new THREE.Mesh(eyeDarkPartGeom, eyeDarkMaterial);
+  eyeDarkPart.position.set(-2.5, 0.8,5);
+  // scene.add(eyeDarkPart);
+
+  var pupilGeom = new THREE.CircleGeometry(0.7, 100);
+  var pupil = new THREE.Mesh(pupilGeom, eyeDarkMaterial);
+  pupil.position.set(-2.5, 1,5.2);
+  // scene.add(pupil);
+
+  eyeFront.add(eyeBigCirc);
+  eyeFront.add(glassEye);
+  eyeFront.add(eyeBorder);
+  eyeFront.add(eyeLightPart);
+  eyeFront.add(eyeDarkPart);
+  eyeFront.add(pupil);
 
 
 
+  glassEye.position.set(-2.5, 0.8,5);
+  glassCam.position.set(-2.5,0.8,5);
 
-
- 
-
-
-
-
-
- //  var eyeFrontL = new THREE.Object3D();
-
- //  var glassEyeL;
- //  var glassEyeCamL; 
-
- //  var marbleSet = createMarble(0x524CFD, 0x444444, 5, 1.9);
-
- //  glassEyeL = marbleSet[0];
-
- //  glassEyeCamL = marbleSet[1];
-
- //  glassEyeL.scale.z = 0.7;
- //  var steelMaterial =  new THREE.MeshPhongMaterial(  {color: 0x121212,
- //   ambient: 0x121212,
- //   specular: 0x4F4F4F            
- // });
-
- //  var eyeBigCircGeom = new THREE.TorusGeometry( 1.9, 0.1, 16, 100 ); 
- //  var eyeBigCircL = new THREE.Mesh( eyeBigCircGeom,steelMaterial );
- //  eyeBigCircL.position.set(-2.5, 0.8,5 );
-
- //  var eyeBorderGeom = new THREE.TorusGeometry(1, 0.1, 16, 100);
- //  var eyeBorderL = new THREE.Mesh(eyeBorderGeom, steelMaterial);
- //  eyeBorderL.position.set(-2.5,1,5.1);
- //  // scene.add(eyeBorderL);
-
- //  var eyeLightMaterial = new THREE.MeshPhongMaterial(
- //    { color: 0x898989,
- //      ambient: 0x898989,
- //      specular:0x545454
- //    });
-
-
- //  var  eyeDarkMaterial = new THREE.MeshPhongMaterial(
- //    { color: 0x000000,
- //      ambient: 0x000000,
- //      specular:0x545454
- //    });
-
- //  var eyeLightPartGeom = new THREE.CircleGeometry(1,100);
- //  eyeLightPartL = new THREE.Mesh(eyeLightPartGeom, eyeLightMaterial);
- //  eyeLightPartL.position.set(-2.5,1,5.1);
- //  // scene.add(eyeLightPart);
-
-
- //  var eyeDarkPartGeom = new THREE.CircleGeometry(1.9,100);
- //  var eyeDarkPartL = new THREE.Mesh(eyeDarkPartGeom, eyeDarkMaterial);
- //  eyeDarkPartL.position.set(-2.5, 0.8,5);
- //  // scene.add(eyeDarkPart);
-
- //  var pupilGeom = new THREE.CircleGeometry(0.7, 100);
- //  var pupilL = new THREE.Mesh(pupilGeom, eyeDarkMaterial);
- //  pupilL.position.set(-2.5, 1,5.2);
- //  // scene.add(pupil);
-
-
-
-
- //  eyeFrontL.add(eyeBigCircL);
- //  eyeFrontL.add(glassEyeL);
- //  eyeFrontL.add(eyeBorderL);
- //  eyeFrontL.add(eyeLightPartL);
- //  eyeFrontL.add(eyeDarkPartL);
- //  eyeFrontL.add(pupilL);
- //  eyeFrontL.position.set(1,0.4,0);
-
- //  scene.add(eyeFrontL);
-
-
- //  var eyeFrontR = new THREE.Object3D();
-
-
- //  var glassEyeR;
- //  var glassEyeCamR; 
-
- //  var marbleSet2 = createMarble(0x524CFD, 0x444444, 5, 1.9);
-
- //  glassEyeR = marbleSet2[0];
- //  glassEyeCamR = marbleSet2[1];
-
- //  glassEyeR.scale.z = 0.7;
-
- //  var eyeBigCircR = new THREE.Mesh( eyeBigCircGeom,steelMaterial );
- //  eyeBigCircR.position.set(2.5, 0.8,5 );
-
- //  var eyeBorderR = new THREE.Mesh(eyeBorderGeom, steelMaterial);
- //  eyeBorderR.position.set(2.5,1,5.1);
- //  // scene.add(eyeBorderL);
-
-
- //  eyeLightPartR = new THREE.Mesh(eyeLightPartGeom, eyeLightMaterial);
- //  eyeLightPartR.position.set(2.5,1,5.2);
-
-
- //  var eyeDarkPartR = new THREE.Mesh(eyeDarkPartGeom, eyeDarkMaterial);
- //  eyeDarkPartR.position.set(2.5, 0.8,5);
- //  // scene.add(eyeDarkPart);
- //  var pupilR = new THREE.Mesh(pupilGeom, eyeDarkMaterial);
- //  pupilR.position.set(2.5, 1,5.3);
- //  // scene.add(pupil);
-
-
- //  eyeFrontR.add(eyeBigCircR);
- //  eyeFrontR.add(glassEyeR);
- //  eyeFrontR.add(eyeBorderR);
- //  eyeFrontR.add(eyeLightPartR);
- //  eyeFrontR.add(eyeDarkPartR);
- //  eyeFrontR.add(pupilR);
- //  eyeFrontR.position.y=0.6;
- //  eyeFrontR.position.z=0.3;
- //  eyeFrontR.position.x=0.6;
-
- //  scene.add(eyeFrontR);
-
-
- 
-
- //    glassEyeL.position.set(-2.5, 0.8,5);
- //  glassEyeCamL.position.set(-2.5,0.8,5);
- //  glassEyeR.position.set(2.5, 0.8,5);
- //  glassEyeCamR.position.set(2.5,0.8,5);
-
-
-
- //  scene.add(eyeOne);
- //  scene.add(eyeSecond);
- //  //scene.add(eyeBigCircL);
- //  //scene.add(eyeBigCircL);
- //  scene.add(backEyeOne);
- //  scene.add(backEyeTwo);
- //  scene.add(eyeDetail);
-
-function createHead() {
-var head = new THREE.Object3D();
-
+  return eyeFront;
 
 }
 
+var glassEyeL;
+var glassEyeCamL; 
+var glassEyeR;
+var glassEyeCamR; 
+
+var marbleSet1 = createMarble(0x524CFD, 0x444444, 5, 1.9);
+glassEyeL = marbleSet1[0];
+glassEyeCamL = marbleSet1[1];
+
+var marbleSet2 = createMarble(0x524CFD, 0x444444, 5, 1.9);
+glassEyeR = marbleSet2[0];
+glassEyeCamR = marbleSet2[1];
+
+function createHead() {
+  var head = new THREE.Object3D();
+
+  headGeom = new THREE.BoxGeometry(4,2.5,3);
+  addTextureCoords(headGeom, 3, 3);
+  var texturedHeadBox = new THREE.Mesh(headGeom, eyeCoverMaterial);
+  texturedHeadBox.position.set(0.8,1.2,1);
+
+  var eyeBaseR = createEyeBase(1);
+  eyeBaseR.position.set(7,-1,-2);
+  head.add(eyeBaseR);
+
+  var eyeBaseL = createEyeBase(-1);
+  eyeBaseL.position.set(-5,-1,3);
+  head.add(eyeBaseL);
+
+  var eyeFrontL = createEyeFront(glassEyeL, glassEyeCamL);
+  eyeFrontL.position.set(1,1.4,-1.9)
+  head.add(eyeFrontL);
+
+  var eyeFrontR = createEyeFront(glassEyeR, glassEyeCamR);
+  eyeFrontR.position.set(6,1.4,-1.9);
+  head.add(eyeFrontR);
+  head.add(texturedHeadBox);
 
 
- 
+  return head;
+}
 
-  function addTextureCoords(boxGeom, maxT, maxS) {
+var head = createHead();
+head.position.y = -1;
+scene.add(head);
 
-    var UVs = [];
-    function faceCoords(as,at, bs,bt, cs,ct) {
-      UVs.push( [ new THREE.Vector2(as,at),
-        new THREE.Vector2(bs,bt),
-        new THREE.Vector2(cs,ct)] );
-    }
+
+
+function createTexturedNeck(){
+
+     var neck = new THREE.Shape();
+    neck.moveTo(0,0);
+    neck.lineTo(2,-1)
+    neck.lineTo(2,-4);
+    neck.lineTo(1,-6);
+    neck.lineTo(0.5,-5);
+    neck.lineTo(0.5, -3);
+    neck.lineTo(0,-2);
+    neck.moveTo(0,0);
+
+        var options2 = {
+      amount: 2,
+      bevelThickness: 0,
+      bevelSize: 0,
+      bevelSegments: 3,
+      bevelEnabled: false,
+      curveSegments: 12,
+      steps: 1
+    };
+
+  var yellowTexture = new THREE.ImageUtils.loadTexture("yellowMetal.jpg", 
+    new THREE.UVMapping(),
+    function () {
+      console.log("yellowTexture is loaded.");
+      imageLoaded = true;
+      TW.render();
+    });
+  yellowTexture.wrapS = yellowTexture.wrapT = THREE.MirroredRepeatWrapping;
+  yellowTexture.repeat.set( 1 / 7, 1 / 7 );
+  yellowTexture.offset.set( 0.8, 0.9 );
+  var yellowMaterial = new THREE.MeshPhongMaterial(
+    { color: 0x898989,
+      specular:0xFFFFFF,
+      shininess: 0,
+      map: yellowTexture,
+      receiveShadow: true
+    });
+
+  var neckGeom = new THREE.ExtrudeGeometry(neck, options2);
+   // neckGeom.applyMatrix(new THREE.Matrix4().makeTranslation(-20, 0, 0));
+   var texturedNeck = new THREE.SceneUtils.createMultiMaterialObject(neckGeom, [yellowMaterial]);
+   return texturedNeck;
+ }
+
+ var neckDetail = createTexturedNeck();
+  // neckDetail.rotation.y = 2*Math.PI-Math.PI/2;
+  // neckDetail.rotation.x =2*Math.PI- Math.PI/6;
+  // neckDetail.position.set(2,8.5,18);
+  scene.add(neckDetail);
+
+  function createNeck() {
+
+    var wholeNeck = new THREE.Object3D();    
+
+  // var neckGeom = new THREE.ExtrudeGeometry(neck, options2);
+  // // var neckDetail = new THREE.SceneUtils.createMultiMaterialObject(neckGeom, [yellowMaterial]);
+  // var neckDetail = new THREE.Mesh(neckGeom, yellowMaterial);
+  // neckDetail.rotation.y = 2*Math.PI-Math.PI/2;
+  // neckDetail.rotation.x =2*Math.PI- Math.PI/6;
+  // neckDetail.position.set(2,-1.5,0.5);
+  // wholeNeck.add(neckDetail);
+
+  var bodyCylGeom = new THREE.CylinderGeometry(1, 1, 2.5, 32 );
+  var bodyCyl = new THREE.Mesh(bodyCylGeom, yellowMaterialForCyl );
+
+  var bodyDiscGeom = new THREE.CylinderGeometry(1, 1, 0.4, 32 );
+  var bodyDisc = new THREE.Mesh(bodyDiscGeom, yellowMaterialForCyl);
+
+  var neckBaseGeom = new THREE.CylinderGeometry(1,1.6, 4, 32, true);
+  var neckBase = new THREE.Mesh(neckBaseGeom, yellowNeckMat);
+
+
+  var neckHolderGeom = new THREE.CylinderGeometry(1, 1, 0.4, 32);
+  var neckHolder1 = new THREE.Mesh(neckHolderGeom, eyeCoverMaterial);
+
+  var neckHolder2 = new THREE.Mesh(neckHolderGeom, eyeCoverMaterial);
+
+  bodyCyl.rotation.z=Math.PI/2;
+  bodyCyl.position.set(1,-5,3);
+  bodyDisc.rotation.x = Math.PI/6;
+  bodyDisc.position.set(1,-6,2.4);
+
+  neckBase.position.set(1,-8,1.3);
+  neckBase.rotation.x = Math.PI/6
+  neckHolder1.scale.x = 1.5;
+  neckHolder2.scale.x=1.5;
+  neckHolder1.rotation.z = Math.PI/2;
+  neckHolder2.rotation.z=Math.PI/2;
+  neckHolder1.position.set(-0.6,-9.2,1);
+  neckHolder2.position.set(2.5, -9.2,1);
+  wholeNeck.add(bodyCyl);
+  wholeNeck.add(bodyDisc);
+  wholeNeck.add(neckBase);
+  wholeNeck.add(neckHolder1);
+  wholeNeck.add(neckHolder2);
+
+  return wholeNeck;
+}
+
+wholeNeck = createNeck();
+scene.add(wholeNeck);
+
+
+
+function addTextureCoords(boxGeom, maxT, maxS) {
+
+  var UVs = [];
+  function faceCoords(as,at, bs,bt, cs,ct) {
+    UVs.push( [ new THREE.Vector2(as,at),
+      new THREE.Vector2(bs,bt),
+      new THREE.Vector2(cs,ct)] );
+  }
       // front
       faceCoords(0,0, maxS,0, maxS,maxT);
       faceCoords(0,0, maxS,maxT, 0,maxT);
@@ -251,167 +291,113 @@ var head = new THREE.Object3D();
 
     }
 
-
-
-
-  var ringGeom = new THREE.CylinderGeometry(1.2, 1.2, 1, 32 ); 
-  var ring = new THREE.Mesh(ringGeom, material2);
-
-
-  var bodyCylGeom = new THREE.CylinderGeometry(1, 1, 2.5, 32 );
-  var bodyCyl = new THREE.Mesh(bodyCylGeom, material );
-
-  var bodyDiscGeom = new THREE.CylinderGeometry(1, 1, 0.4, 32 );
-  var bodyDisc = new THREE.Mesh(bodyDiscGeom, material2);
-
-  var neckBaseGeom = new THREE.CylinderGeometry(1,1.6, 4, 32);
-  var neckBase = new THREE.Mesh(neckBaseGeom, material);
-
-  var subCubeGeom = new THREE.BoxGeometry(5,4,5);
-  var subCube = new THREE.Mesh(subCubeGeom, material2);
-
-  var armStartGeom = new THREE.CylinderGeometry(0.8,0.8,2,32);
-  var armStart = new THREE.Mesh(armStartGeom, material2);
-  var armStart2 = new THREE.Mesh(armStartGeom, material2);
-
+    var armStartGeom = new THREE.CylinderGeometry(0.8,0.8,2,32);
+    var armStart = new THREE.Mesh(armStartGeom, material2);
+    var armStart2 = new THREE.Mesh(armStartGeom, material2);
 
  
 
+    var bodyCover = new THREE.Shape();
+    bodyCover.moveTo(0,0);
+    bodyCover.lineTo(13,0);
+    bodyCover.lineTo(13,-2);
+    bodyCover.lineTo(12.7,-2);
+    bodyCover.lineTo(12.7, -0.4);
+    bodyCover.lineTo(0,-0.4);
 
- 
-
-
-  var neck = new THREE.Shape();
-  neck.moveTo(0,0);
-  neck.lineTo(2,-1)
-  neck.lineTo(2,-4);
-  neck.lineTo(1,-6);
-  neck.lineTo(0.5,-5);
-  neck.lineTo(0.5, -3);
-  neck.lineTo(0,-2);
-  neck.moveTo(0,0);
-
-  var bodyCover = new THREE.Shape();
-  bodyCover.moveTo(0,0);
-  bodyCover.lineTo(13,0);
-  bodyCover.lineTo(13,-2);
-  bodyCover.lineTo(12.7,-2);
-  bodyCover.lineTo(12.7, -0.4);
-  bodyCover.lineTo(0,-0.4);
-
-  var wheel1 = new THREE.Shape();
-  wheel1.moveTo(0.3,0);
-  wheel1.bezierCurveTo(9,-8,1,-8, 1,-8);
-  wheel1.lineTo(-1,-8)
-  wheel1.bezierCurveTo(-6,-7,0.3, 0,0.3,0);
+    var wheel1 = new THREE.Shape();
+    wheel1.moveTo(0.3,0);
+    wheel1.bezierCurveTo(9,-8,1,-8, 1,-8);
+    wheel1.lineTo(-1,-8)
+    wheel1.bezierCurveTo(-6,-7,0.3, 0,0.3,0);
 
 
-  var arm = new THREE.Shape();
-  arm.moveTo(1.4,-0.31);
-  arm.lineTo(3,-2);
-  arm.lineTo(3, -4);
-  arm.lineTo(2.5, -4);
-  arm.lineTo(2.5,-2);
-  arm.lineTo(1,-1.9);
+    var arm = new THREE.Shape();
+    arm.moveTo(1.4,-0.31);
+    arm.lineTo(3,-2);
+    arm.lineTo(3, -4);
+    arm.lineTo(2.5, -4);
+    arm.lineTo(2.5,-2);
+    arm.lineTo(1,-1.9);
 
 
 
-  var neckPoints = [];
-  neckPoints.push(new THREE.Vector3(0,0.5,0));
-  neckPoints.push(new THREE.Vector3(1, -0.8, 0));
-  neckPoints.push(new THREE.Vector3(0.8, -1.75,0));
-  neckPoints.push(new THREE.Vector3(0, -2,0));
+    var neckPoints = [];
+    neckPoints.push(new THREE.Vector3(0,0.5,0));
+    neckPoints.push(new THREE.Vector3(1, -0.8, 0));
+    neckPoints.push(new THREE.Vector3(0.8, -1.75,0));
+    neckPoints.push(new THREE.Vector3(0, -2,0));
 
-  var neckPoints2 = [];
-  neckPoints2.push(new THREE.Vector3(0,0.5,0));
-  neckPoints2.push(new THREE.Vector3(-1, -0.8, 0));
-  neckPoints2.push(new THREE.Vector3(-0.8, -1.75,0));
-  neckPoints2.push(new THREE.Vector3(0, -2,0));
+    var neckPoints2 = [];
+    neckPoints2.push(new THREE.Vector3(0,0.5,0));
+    neckPoints2.push(new THREE.Vector3(-1, -0.8, 0));
+    neckPoints2.push(new THREE.Vector3(-0.8, -1.75,0));
+    neckPoints2.push(new THREE.Vector3(0, -2,0));
 
-  var wireGeom1 = new THREE.TubeGeometry(new THREE.SplineCurve3(neckPoints), 100, 0.1, 100, false);
-  var wireOne = createMeshTube(wireGeom1);
-
-
-  var wireGeom2 = new THREE.TubeGeometry(new THREE.SplineCurve3(neckPoints2), 100, 0.1, 100, false);
-  var wireTwo= createMeshTube(wireGeom2);
+    var wireGeom1 = new THREE.TubeGeometry(new THREE.SplineCurve3(neckPoints), 100, 0.1, 100, false);
+    var wireOne = createMeshTube(wireGeom1);
 
 
-
-  var neckHolderGeom = new THREE.CylinderGeometry(1, 1, 0.4, 32);
-  var neckHolder1 = new THREE.Mesh(neckHolderGeom, material2);
-
-  var neckHolder2 = new THREE.Mesh(neckHolderGeom, material2);
-
-  var bodyBoxGeom = new THREE.BoxGeometry(12,10,12);
-  var bodyBox = new THREE.Mesh(bodyBoxGeom, material);
-
-  var sholderGeom = new THREE.CylinderGeometry(0.7,0.7,2,5,32);
-  var sholder = new THREE.Mesh(sholderGeom, material2);
-  var sholder2 = new THREE.Mesh(sholderGeom, material2);
-  var handGeom = new THREE.BoxGeometry(1.4,1,10);
-  var hand = new THREE.Mesh(handGeom, material2);
-  var hand2 = new THREE.Mesh(handGeom, material2);
-  var wristGeom = new THREE.CylinderGeometry(0.4,0.4,3, 32);
-  var wrist = new THREE.Mesh(wristGeom, material);
-  var wrist2 =  new THREE.Mesh(wristGeom, material);
+    var wireGeom2 = new THREE.TubeGeometry(new THREE.SplineCurve3(neckPoints2), 100, 0.1, 100, false);
+    var wireTwo= createMeshTube(wireGeom2);
 
 
 
 
-  var options = {
-    amount: 5,
-    bevelThickness: 0,
-    bevelSize: 0,
-    bevelSegments: 3,
-    bevelEnabled: false,
-    curveSegments: 12,
-    steps: 1
-  };
+    var bodyBoxGeom = new THREE.BoxGeometry(12,10,12);
+    var bodyBox = new THREE.Mesh(bodyBoxGeom, material);
 
-  var options2 = {
-    amount: 2,
-    bevelThickness: 0,
-    bevelSize: 0,
-    bevelSegments: 3,
-    bevelEnabled: false,
-    curveSegments: 12,
-    steps: 1
-  };
-  var options3 = {
-    amount: 14,
-    bevelThickness: 0,
-    bevelSize: 0,
-    bevelSegments: 0,
-    bevelEnabled: false,
-    curveSegments: 0,
-    steps: 1
-  };
-
-  var options4 = {
-    amount: 1.4,
-    bevelThickness: 0,
-    bevelSize: 0,
-    bevelSegments: 0,
-    bevelEnabled: false,
-    curveSegments: 0,
-    steps: 1
-  };
-
- 
+    var sholderGeom = new THREE.CylinderGeometry(0.7,0.7,2,5,32);
+    var sholder = new THREE.Mesh(sholderGeom, material2);
+    var sholder2 = new THREE.Mesh(sholderGeom, material2);
+    var handGeom = new THREE.BoxGeometry(1.4,1,10);
+    var hand = new THREE.Mesh(handGeom, material2);
+    var hand2 = new THREE.Mesh(handGeom, material2);
+    var wristGeom = new THREE.CylinderGeometry(0.4,0.4,3, 32);
+    var wrist = new THREE.Mesh(wristGeom, material);
+    var wrist2 =  new THREE.Mesh(wristGeom, material);
 
 
 
-    headGeom = new THREE.BoxGeometry(4,2,7);
-    addTextureCoords(headGeom, 3, 3);
 
-    var texturedHeadBox = new THREE.Mesh(headGeom, eyeCoverMaterial);
+    var options = {
+      amount: 5,
+      bevelThickness: 0,
+      bevelSize: 0,
+      bevelSegments: 3,
+      bevelEnabled: false,
+      curveSegments: 12,
+      steps: 1
+    };
 
+    var options2 = {
+      amount: 2,
+      bevelThickness: 0,
+      bevelSize: 0,
+      bevelSegments: 3,
+      bevelEnabled: false,
+      curveSegments: 12,
+      steps: 1
+    };
+    var options3 = {
+      amount: 14,
+      bevelThickness: 0,
+      bevelSize: 0,
+      bevelSegments: 0,
+      bevelEnabled: false,
+      curveSegments: 0,
+      steps: 1
+    };
 
-    var eyeDetailGeom = new THREE.BoxGeometry( 3, 3, 1 );
-    addTextureCoords(eyeDetailGeom,3,3);
-    var eyeDetail = new THREE.Mesh(eyeDetailGeom, eyeCoverMaterial);
-    eyeDetail.position.set(0.9,1.1,3.5);
-
+    var options4 = {
+      amount: 1.4,
+      bevelThickness: 0,
+      bevelSize: 0,
+      bevelSegments: 0,
+      bevelEnabled: false,
+      curveSegments: 0,
+      steps: 1
+    };
 
     var textureYellowDetail = new THREE.ImageUtils.loadTexture("yellowDetail.jpg", 
       new THREE.UVMapping(),
@@ -443,41 +429,6 @@ var head = new THREE.Object3D();
   topBox = new THREE.Mesh (topBoxGeom, yellowDetailMat);
 
 
-  function createTexturedNeck(){
-
-    var yellowTexture = new THREE.ImageUtils.loadTexture("yellowMetal.jpg", 
-      new THREE.UVMapping(),
-      function () {
-        console.log("yellowTexture is loaded.");
-        imageLoaded = true;
-        TW.render();
-      });
-
-    yellowTexture.wrapS = yellowTexture.wrapT = THREE.MirroredRepeatWrapping;
-    yellowTexture.repeat.set( 1 / 7, 1 / 7 );
-    yellowTexture.offset.set( 0.8, 0.9 );
-
-
-
-    var yellowMaterial = new THREE.MeshPhongMaterial(
-      { color: 0x898989,
-        specular:0xFFFFFF,
-        shininess: 0,
-        map: yellowTexture,
-        receiveShadow: true
-      });
-
-    var neckGeom = new THREE.ExtrudeGeometry(neck, options2);
-    neckGeom.applyMatrix(new THREE.Matrix4().makeTranslation(-20, 0, 0));
-
-    var texturedNeck = new THREE.SceneUtils.createMultiMaterialObject(neckGeom, [yellowMaterial]);
-    return texturedNeck;
-  }
-  var neckDetail = createTexturedNeck();
-  neckDetail.rotation.y = 2*Math.PI-Math.PI/2;
-  neckDetail.rotation.x =2*Math.PI- Math.PI/6;
-  neckDetail.position.set(2,8.5,18);
-  scene.add(neckDetail);
 
 
   var bodyTop = createMesh(new THREE.ExtrudeGeometry(bodyCover, options3));
@@ -549,15 +500,13 @@ var head = new THREE.Object3D();
 
 
   //eyeSecond.rotation.z = Math.PI*2 - Math.PI/6;
- 
+
   // neckDetail.rotation.y = 2*Math.PI-Math.PI/2;
   // neckDetail.rotation.x =2*Math.PI- Math.PI/6;
   // neckDetail.position.set(2,8.5,18);
-  texturedHeadBox.position.set(0.8,1.2,-0.7);
-  bodyCyl.rotation.z=Math.PI/2;
-  bodyCyl.position.set(1,-5,3);
-  ring.position.set(1,-5,3);
-  ring.rotation.z= Math.PI/2;
+
+
+  
   //glassBall.scale.z = 0.8;
   // sphereCamera.position.set(10, 50, 25);
 
@@ -567,24 +516,16 @@ var head = new THREE.Object3D();
   //eyeBallTwo.scale.z= 0.7;
   //eyeBallTwo.position.set(4.1, 1.2,5);
 
-  bodyDisc.rotation.x = Math.PI/6;
-  bodyDisc.position.set(1,-6,2.4);
+
   topBox.rotation.x = 2*Math.PI-Math.PI/6;
   topBox.position.set(1,-2.8,3.6);
   wireOne.position.set(1.5,-0.5,3.5);
   wireTwo.position.set(0.6,-0.5,3.5);
-  neckBase.position.set(1,-8,1.3);
-  neckBase.rotation.x = Math.PI/6
-  neckHolder1.scale.x = 1.5;
-  neckHolder2.scale.x=1.5;
-  neckHolder1.rotation.z = Math.PI/2;
-  neckHolder2.rotation.z=Math.PI/2;
-  neckHolder1.position.set(-0.6,-9.2,1);
-  neckHolder2.position.set(2.5, -9.2,1);
+
   bodyBox.position.set(1,-14,0);
   bodyTop.rotation.y = Math.PI/2;
   bodyTop.position.set(-6,-8.7,-13.2);
-  subCube.position.set(1,-8,5);
+
   wheelOne.rotation.y = Math.PI/2;
   wheelOne.scale.x = 1.3;
   wheelOne.position.set(6.9,-12.7,-25);
@@ -674,25 +615,15 @@ var head = new THREE.Object3D();
 
 
 
-  //scene.add(neckDetail);
-  scene.add(texturedHeadBox);
-  scene.add(bodyCyl);
-  scene.add(bodyDisc);
+
   scene.add(topBox);
-  scene.add(wireOne);
-  scene.add(wireTwo);
-  scene.add(ring);
-  scene.add(neckBase);
-  scene.add(neckHolder1);
-  scene.add(neckHolder2);
+  // scene.add(wireOne);
+  // scene.add(wireTwo);
+  
+
   scene.add(bodyBox);
   scene.add(bodyTop);
-  //scene.add(eyeBallOne);
-  //scene.add(glassBall);
 
-  //scene.add(glassBallCam);
-  //scene.add(eyeBallTwo);
-  //scene.add(subCube);
   scene.add(wheelOne);
   scene.add(wheelTwo);
   scene.add(wholeHand);
@@ -721,13 +652,13 @@ var head = new THREE.Object3D();
 
  }
 
-// animate();
+ animate();
 
- function showCP(cpList) {
-  for( var i=0; i < cpList.length; i++ ) {
-    scene.add(TW.createPoint(cpList[i]));
-  }
-};
+//  function showCP(cpList) {
+//   for( var i=0; i < cpList.length; i++ ) {
+//     scene.add(TW.createPoint(cpList[i]));
+//   }
+// };
 
   //showCP(controlPoints);          // optional, for debugging.
   TW.viewFromFront();        
