@@ -60,42 +60,67 @@ function render() {
 
 }
 
-
-   var surfPoints1 = [ [ [-6.1,6.1,0],  [-6.1,3,0], [-5.9,0.8,0], [-2,-0.2,0] ],
-  [ [-6.1,6.1,2], [-6.1,3,2],  [-5.9,0.8,2], [-2,-0.2,2] ],
-  [ [-6.1,6.1,4], [-6.1,3,4],  [-5.9,0.8,4],  [-2,-0.2,4] ],
-  [ [-6.1,6.1,6],  [-6.1,3,6],  [-5.9,0.8,6],  [-2,-0.2,6] ] ];
-
-
-  var surfPoints2 = [ [ [-2,-0.2,0],  [0,-0.2,0], [2.7,0,0], [1.7,4,0] ],
-  [ [-2,-0.2,2], [0,-0.2,2],  [2.7,0,2], [1.7,4,2] ],
-  [ [-2,-0.2,4], [0,-0.2,4],  [2.7,0,4],  [1.7,4,4] ],
-  [ [-2,-0.2,6],  [0,-0.2,6],  [2.7,0,6],  [1.7,4,6] ] ];
-
-  var surfPoints3 = [ [ [1.7,4,0],  [0.5,5,0], [-3,5.4,0], [-6.1,6.1,0] ],
-  [ [1.7,4,2], [0.5,5,2],  [-3,5.4,2], [-6.1,6.1,2] ],
-  [ [1.7,4,4], [0.5,5,4],  [-3,5.4,4],  [-6.1,6.1,4] ],
-  [ [1.7,4,6],  [0.5,5,6],  [-3,5.4,6],  [-6.1,6.1,6] ] ];
+var textureWheel = new THREE.ImageUtils.loadTexture("wheel.jpg", 
+    new THREE.UVMapping(),
+    function () {
+      console.log("eyeTexture is loaded.");
+      imageLoaded = true;
+      TW.render();
+    });
 
 
-    var surfGeom1 = new THREE.BezierSurfaceGeometry( surfPoints1.reverse(), 60, 60 );
+
+  textureWheel.wrapS = textureWheel.wrapT = THREE.MirroredRepeatWrapping;
+   textureWheel.repeat.set( 2, 2);
+  // textureWheel.offset.set( 0.8, 0.9 );
+
+
+  var wheelMaterial = new THREE.MeshPhongMaterial(
+    { color: 0x898989,
+      specular:0xFFFFFF,
+      shininess: 0,
+      map: textureWheel,
+      side: THREE.DoubleSide,
+      castShadow: true
+    });
+
+function createWheel () {
+
+var wheel = new THREE.Object3D();
+  var surfPoints1 = [[ [ -2,7,0],  [-2,7,2], [-2,4,7], [-2,2,7] ],
+                      [ [-1,7,0], [-1,7,2],  [-1,4,7], [-1,2,7] ],
+                      [ [0,7,0], [0,7,2],  [0,4,7],  [0,2,7] ],
+                      [ [2,7,0],  [2,7,2],  [2,4,7],  [2,2,7] ] ];
+
+
+
+  var surfPoints2 = [ [ [-2,2,7],  [-2,0,7], [-2,0,-7], [-2,2,-7] ],
+                    [ [-1,2,7], [-1,0,7],  [-1,0,-7], [-1,2,-7] ],
+                    [ [0,2,7], [0,0,7],  [0,0,-7],  [0,2,-7] ],
+                    [ [2,2,7],  [2,0,7],  [2,0,-7],  [2,2,-7] ] ];
+
+
+
+   var surfGeom1 = new THREE.BezierSurfaceGeometry( surfPoints1.reverse(), 60, 60 );
   var surfGeom2 = new THREE.BezierSurfaceGeometry(surfPoints2.reverse(), 60,60);
-  var surfGeom3 = new THREE.BezierSurfaceGeometry(surfPoints3.reverse(), 60,60);
+  
+  var eyeCov1 = new THREE.SceneUtils.createMultiMaterialObject(surfGeom1, [wheelMaterial]);
 
-  var eyeCov1 = new THREE.SceneUtils.createMultiMaterialObject(surfGeom1, [eyeCoverMaterial]);
+   var eyeCov2 = new THREE.SceneUtils.createMultiMaterialObject(surfGeom2, [wheelMaterial]);
 
-  var eyeCov2 = new THREE.SceneUtils.createMultiMaterialObject(surfGeom2, [eyeCoverMaterial]);
+var curve3 = eyeCov1.clone();
+curve3.rotation.y= Math.PI;
+wheel.add(eyeCov1);
+wheel.add(eyeCov2);
+wheel.add(curve3);
 
-  var eyeCov3 = new THREE.SceneUtils.createMultiMaterialObject(surfGeom3, [eyeCoverMaterial]);
+return wheel;
+}
 
-
-scene.add(eyeCov1);
-scene.add(eyeCov2);
-scene.add(eyeCov3);
-//create ambient light
+var wheel = createWheel();
+scene.add(wheel);
 
 var ambLight = new THREE.AmbientLight(0xFFFFFF); // soft white light 
-
 ambLight.name = "ambient";
 
 scene.add( ambLight );

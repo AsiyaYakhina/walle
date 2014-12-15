@@ -1,4 +1,6 @@
 
+    // script is now loaded and executed.
+    // put your dependent JS here.
 
 var textureEyeCover = new THREE.ImageUtils.loadTexture("darkMetalEye.jpg", 
     new THREE.UVMapping(),
@@ -121,29 +123,82 @@ var textureEye = new THREE.ImageUtils.loadTexture("whiteMetal.jpg",
         map: yellowNeckText,
         receiveShadow: true
       });
- 
-   var textureYellowDetail = new THREE.ImageUtils.loadTexture("yellowDetail.jpg", 
-      new THREE.UVMapping(),
-      function () {
-        console.log("yellowDetail is loaded.");
-        imageLoaded = true;
-        TW.render();
-      });
+
+
+var textureWheel = new THREE.ImageUtils.loadTexture("wheel.jpg", 
+    new THREE.UVMapping(),
+    function () {
+      console.log("eyeTexture is loaded.");
+      imageLoaded = true;
+      TW.render();
+    });
 
 
 
-    textureYellowDetail.wrapS = textureYellowDetail.wrapT = THREE.MirroredRepeatWrapping;
-  // textureYellowDetail.repeat.set( 1 / 10, 1 / 10 );
-  // textureYellowDetail.offset.set( 0.8, 0.9 );
+  textureWheel.wrapS = textureWheel.wrapT = THREE.MirroredRepeatWrapping;
+   textureWheel.repeat.set( 2, 2);
+  // textureWheel.offset.set( 0.8, 0.9 );
 
 
-  var yellowDetailMat = new THREE.MeshPhongMaterial(
+  var wheelMaterial = new THREE.MeshPhongMaterial(
     { color: 0x898989,
       specular:0xFFFFFF,
       shininess: 0,
-      map: textureYellowDetail,
+      map: textureWheel,
+      side: THREE.DoubleSide,
       castShadow: true
     });
+
+
+
+var textureHand = new THREE.ImageUtils.loadTexture("handText2.jpg", 
+    new THREE.UVMapping(),
+    function () {
+      console.log("hadTexture is loaded.");
+      imageLoaded = true;
+      TW.render();
+    });
+
+
+
+  textureHand.wrapS = textureHand.wrapT =THREE.RepeatWrapping;
+  textureHand.repeat.set( 1/10, 1/2);
+  // textureWheel.offset.set( 0.8, 0.9 );
+
+
+  var handMaterial = new THREE.MeshPhongMaterial(
+    { color: 0x898989,
+      specular:0xFFFFFF,
+      shininess: 0,
+      map: textureHand,
+      side: THREE.DoubleSide,
+      castShadow: true
+    });
+
+
+
+  //  var textureYellowDetail = new THREE.ImageUtils.loadTexture("yellowDetail.jpg", 
+  //     new THREE.UVMapping(),
+  //     function () {
+  //       console.log("yellowDetail is loaded.");
+  //       imageLoaded = true;
+  //       TW.render();
+  //     });
+
+
+
+  //   textureYellowDetail.wrapS = textureYellowDetail.wrapT = THREE.MirroredRepeatWrapping;
+  // // textureYellowDetail.repeat.set( 1 / 10, 1 / 10 );
+  // // textureYellowDetail.offset.set( 0.8, 0.9 );
+
+
+  // var yellowDetailMat = new THREE.MeshPhongMaterial(
+  //   { color: 0x898989,
+  //     specular:0xFFFFFF,
+  //     shininess: 0,
+  //     map: textureYellowDetail,
+  //     castShadow: true
+  //   });
  
 
 
