@@ -45,6 +45,22 @@ Final project
   renderer.shadowMapHeight = 10;
 
 
+  var animationState; //global to keep track of changes in penguin's position
+
+  /* resetAnimationState
+  Function that returns the animationState to its starting values so that the
+  animation can be restarted.
+  */
+  function resetAnimationState() {
+    animationState = {
+      time: 0
+    }
+  }
+
+  resetAnimationState();
+
+
+
   var scene = new THREE.Scene(); 
   TW.mainInit(renderer,scene);
   var size = 2;
@@ -349,18 +365,6 @@ function addTextureCoords(boxGeom, maxT, maxS) {
 
     }
 
-   
-
-
-    var bodyCover = new THREE.Shape();
-    bodyCover.moveTo(0,0);
-    bodyCover.lineTo(13,0);
-    bodyCover.lineTo(13,-2);
-    bodyCover.lineTo(12.7,-2);
-    bodyCover.lineTo(12.7, -0.4);
-    bodyCover.lineTo(0,-0.4);
-
-
 
     var arm = new THREE.Shape();
     arm.moveTo(1.4,-0.31);
@@ -431,9 +435,6 @@ function addTextureCoords(boxGeom, maxT, maxS) {
 
 
 
-
-
-    var bodyTop = createMesh(new THREE.ExtrudeGeometry(bodyCover, options3));
 
 
     function modifyTextureParams(geometry, numX, numY) {
@@ -511,18 +512,17 @@ function addTextureCoords(boxGeom, maxT, maxS) {
 
 
   bodyBox.position.set(1,-14,0);
-  bodyTop.rotation.y = Math.PI/2;
-  bodyTop.position.set(-6,-8.7,-13.2);
 
 
 
 
- var mats = new THREE.MeshFaceMaterial(
+
+  var mats = new THREE.MeshFaceMaterial(
 
     [ yellowMaterial,
     handMaterial]);
 
-   function createTexturedHand (handGeom) {
+  function createTexturedHand (handGeom) {
     //setting material indexes for the faces
 
     //putting the brick texture on the front and the back of the barn
@@ -546,7 +546,7 @@ function addTextureCoords(boxGeom, maxT, maxS) {
     return hand;
   }
 
-var textureHandMet = new THREE.ImageUtils.loadTexture("handMetal.jpg", 
+  var textureHandMet = new THREE.ImageUtils.loadTexture("handMetal.jpg", 
     new THREE.UVMapping(),
     function () {
       console.log("hadTextureMet is loaded.");
@@ -571,7 +571,7 @@ var textureHandMet = new THREE.ImageUtils.loadTexture("handMetal.jpg",
 
 
 
-  function createHand(side) { // 1 for right hand, -1 for left hand
+  function createHand() { // 1 for right hand, -1 for left hand
 
     var wholeHand = new THREE.Object3D();
     var handArm = new THREE.Object3D();
@@ -588,7 +588,7 @@ var textureHandMet = new THREE.ImageUtils.loadTexture("handMetal.jpg",
     //   addTextureCoords(handGeom, 1.5, 1.5);
     // var hand = new THREE.Mesh(handGeom, handMaterial);
 
-    var wristGeom = new THREE.CylinderGeometry(0.4,0.4,2, 32);
+    var wristGeom = new THREE.CylinderGeometry(0.4,0.4,2,32);
     var wrist = new THREE.Mesh(wristGeom, yellowMaterial);
 
     var armGeom = new THREE.ExtrudeGeometry(arm,options4)
@@ -627,10 +627,10 @@ var textureHandMet = new THREE.ImageUtils.loadTexture("handMetal.jpg",
 
   var handFaces = createHandwFaces(1.4,2,6);
   var hand = createTexturedHand(handFaces);
-if (side == 1) {
-hand.rotation.y = Math.PI;
-hand.position.set(1,-1.2,1);
-}
+
+    hand.rotation.y = Math.PI;
+    hand.position.set(1,-1.2,1);
+
 
 
   wholeHand.add(hand);
@@ -638,26 +638,31 @@ hand.position.set(1,-1.2,1);
   wholeHand.add(sholder);
 
   wholeHand.add(handArm);
-  wholeHand.position.set(7.4,-13,4);
   wholeHand.rotation.x= Math.PI*2 - Math.PI/6;
 
   return wholeHand;
 }
 
- var hand = createHand(1);
- var handLeft = hand.clone();
- handLeft.rotation.z = Math.PI;
- handLeft.rotation.y = Math.PI/10;
- handLeft.position.set(-6,-14,4);
- scene.add(hand);
- scene.add(handLeft);
+var hand = createHand();
+var handLeft = hand.clone();
+handLeft.rotation.z = Math.PI;
+handLeft.rotation.y = Math.PI/10;
+handLeft.position.set(-6,-14,4);
+
+scene.add(handLeft);
+
+var handPivot = new THREE.Object3D();
+handPivot.add(new THREE.Mesh(new THREE.SphereGeometry(0.3), material));
+handPivot.position.set(10,-10,0);
+handPivot.add(hand);
+scene.add(handPivot);
 
 
 
-  ambLight= new THREE.AmbientLight( 0xA8A8A8, 0.1);
+ambLight= new THREE.AmbientLight( 0xA8A8A8, 0.1);
 
 
-  sptLight = new THREE.SpotLight( 0x999999, 
+sptLight = new THREE.SpotLight( 0x999999, 
                2,               //params.spotLightIntensity,
               300, //params.spotLightDistance,
               2,//params.spotLightAngle,
@@ -688,18 +693,71 @@ hand.position.set(1,-1.2,1);
   scene.add(dirLight);
 
   scene.add(bodyBox);
-  scene.add(bodyTop);
 
 
-
-  function animate() 
-
-  {
-    requestAnimationFrame( animate );
-    render();   
-
+  params = {
+    maxHandRotation: Math.PI/2,
+    handMotion1_begin: 20,
+    handMotion1_end: 40,
+    maxTS: 10
   }
 
+  function resetState() {
+      animationState = {
+        handRotation: 0, // fall from highest height
+        time: 0
+    };
+  }
+
+  function updateHand(ts){
+
+    if (ts>params.handMotion1_begin && ts < params.handMotion1_end){
+      hand.rotation.y += params.maxHandRotation/ (params.handMotion1_end-params.handMotion1_begin);
+    }
+  }
+
+  function updateHead(ts){
+
+
+  }
+  function updateWalle(ts){
+    updateHand(ts);
+
+    // if (ts> params.maxTS){
+    //   stopAnimation();
+    // }
+  }
+
+  function updateState(){
+    animationState.time +=1;
+    updateWalle(animationState.time);
+  }
+
+
+//value to stop the animation
+var animationId = null;
+
+
+  function animateScene() {
+    updateState();
+    animationId = requestAnimationFrame( animateScene );
+    renderer.render(scene, state.cameraObject);
+ 
+  }
+
+function animate() {
+  animationId = requestAnimationFrame( animate );
+  render();
+}
+/*stopAnimation
+Stops the animation if it's started.
+*/
+function stopAnimation() {
+  
+  if (animationId != null) {
+    cancelAnimationFrame(animationId);
+  }
+}
 
   function render() {
    glassEyeL.visible = false;
@@ -716,8 +774,9 @@ hand.position.set(1,-1.2,1);
 
  animate();
 
+TW.setKeyboardCallback("g",animateScene,"go:  start animation");
 
-  TW.viewFromFront();        
-  </script>
+ TW.viewFromFront();        
+ </script>
 </body>
 </html>
