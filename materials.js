@@ -176,6 +176,31 @@ var textureHand = new THREE.ImageUtils.loadTexture("handText2.jpg",
     });
 
 
+var textureHandMet = new THREE.ImageUtils.loadTexture("handMetal.jpg", 
+    new THREE.UVMapping(),
+    function () {
+      console.log("hadTextureMet is loaded.");
+      imageLoaded = true;
+      TW.render();
+    });
+
+
+
+  textureHandMet.wrapS = textureHandMet.wrapT =THREE.MirroredRepeatWrapping;
+  textureHandMet.repeat.set( 1/2, 1/3);
+  // textureWheel.offset.set( 0.8, 0.9 );
+
+
+  var handMetalMat = new THREE.MeshPhongMaterial(
+    { color: 0x898989,
+      specular:0xFFFFFF,
+      shininess: 0,
+      map: textureHandMet,
+      side: THREE.DoubleSide,
+      castShadow: true
+    });
+
+
 
   //  var textureYellowDetail = new THREE.ImageUtils.loadTexture("yellowDetail.jpg", 
   //     new THREE.UVMapping(),

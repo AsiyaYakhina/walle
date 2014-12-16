@@ -1,15 +1,8 @@
 
 
   <!-- 
-  Kelsey Reiman
-  11/1/14 
-  CS 307
-  heartCurve.html
-
-  Creates a cubic bezier curve that is the shape of half a heart
-
-  I learned how to make bezier curves in three.js from: 
-  http://www.lab4games.net/zz85/blog/2014/09/08/rendering-lines-and-bezier-curves-in-three-js-and-webgl/
+Asiya Yakhina
+Final project
 -->
 <html>
 <head>
@@ -321,12 +314,12 @@ textureWheel.repeat.set( 3, 1);
     return wheel;
   }
 
-var wheelL = createWheel();
-wheelL.position.set(-7,-22,0)
-wheelR = createWheel();
-wheelR.position.set(9,-22,0)
-scene.add(wheelL);
-scene.add(wheelR);
+// var wheelL = createWheel();
+// wheelL.position.set(-7,-22,0)
+// wheelR = createWheel();
+// wheelR.position.set(9,-22,0)
+// scene.add(wheelL);
+// scene.add(wheelR);
 
 
 function addTextureCoords(boxGeom, maxT, maxS) {
@@ -356,10 +349,7 @@ function addTextureCoords(boxGeom, maxT, maxS) {
 
     }
 
-    var armStartGeom = new THREE.CylinderGeometry(0.8,0.8,2,32);
-    var armStart = new THREE.Mesh(armStartGeom, material2);
-    var armStart2 = new THREE.Mesh(armStartGeom, material2);
-
+   
 
 
     var bodyCover = new THREE.Shape();
@@ -527,69 +517,7 @@ function addTextureCoords(boxGeom, maxT, maxS) {
 
 
 
-
-
-  function createHand() {
-    var wholeHand = new THREE.Object3D();
-    var handArm = new THREE.Object3D();
-
-    addTextureCoords(headGeom, 1, 1);
-
-    var sholderGeom = new THREE.CylinderGeometry(0.7,0.7,2,5,32);
-    var sholder = new THREE.Mesh(sholderGeom, material2);
-
-    // var handGeom = new THREE.BoxGeometry(1.4,1.6);
-    //   addTextureCoords(handGeom, 1.5, 1.5);
-    // var hand = new THREE.Mesh(handGeom, handMaterial);
-
-    var wristGeom = new THREE.CylinderGeometry(0.4,0.4,3, 32);
-    var wrist = new THREE.Mesh(wristGeom, material);
-
-    var armFirst = createMesh(new THREE.ExtrudeGeometry(arm,options4));
-    var armSecond = createMesh(new THREE.ExtrudeGeometry(arm,options4));
-
-    sholder.position.set(0,0,0);
-  // hand.position.set(0,0,5.8);
-  // hand.rotation.z = Math.PI/2;
-  wrist.position.set(0,0,11);
-  wrist.rotation.x= Math.PI/2;
-  
-  armFirst.rotation.y = Math.PI*2-Math.PI/2;
-  armFirst.position.set(1.4,1.1,31);
-
-  armSecond.rotation.y = Math.PI*2-Math.PI/2; 
-  armSecond.position.set(-0.2,1.1,31)
-  
-  armStart.position.set(0,0,12.3);
-  armStart.rotation.z = Math.PI/2;
-  handArm.add(wrist);
-  handArm.add(armFirst);
-  handArm.add(armSecond);
-  handArm.add(armStart);
-  handArm.position.set(0,0,-2);
-  handArm.rotation.z =Math.PI*2- Math.PI/2;
-
-
-  var handFaces = createHandwFaces(1.4,2,6);
-  var hand = createTexturedHand(handFaces);
-  wholeHand.add(hand);
-
-  wholeHand.add(sholder);
-
-  wholeHand.add(handArm);
-  wholeHand.position.set(7.4,-11.5,0);
-  wholeHand.rotation.x= Math.PI*2 - Math.PI/6;
-
-  return wholeHand;
-}
-
- var hand = createHand();
- scene.add(hand);
-
-
-
-   // creating an array of materials to feed to the barn geometry
-   var mats = new THREE.MeshFaceMaterial(
+ var mats = new THREE.MeshFaceMaterial(
 
     [ yellowMaterial,
     handMaterial]);
@@ -617,10 +545,112 @@ function addTextureCoords(boxGeom, maxT, maxS) {
     var hand = new THREE.Mesh(handGeom, mats);
     return hand;
   }
-var handFaces = createHandwFaces(1.4,2,6);
-var yayHand = createTexturedHand(handFaces);
-yayHand.position.set(0,7,0);
-scene.add(yayHand);
+
+var textureHandMet = new THREE.ImageUtils.loadTexture("handMetal.jpg", 
+    new THREE.UVMapping(),
+    function () {
+      console.log("hadTextureMet is loaded.");
+      imageLoaded = true;
+      TW.render();
+    });
+
+
+
+  textureHandMet.wrapS = textureHandMet.wrapT =THREE.MirroredRepeatWrapping;
+  textureHandMet.repeat.set( 1/2, 1/3);
+  // textureWheel.offset.set( 0.8, 0.9 );
+
+  var handMetalMat = new THREE.MeshPhongMaterial(
+    { color: 0x898989,
+      specular:0xFFFFFF,
+      shininess: 0,
+      map: textureHandMet,
+      side: THREE.DoubleSide,
+      castShadow: true
+    });
+
+
+
+  function createHand(side) { // 1 for right hand, -1 for left hand
+
+    var wholeHand = new THREE.Object3D();
+    var handArm = new THREE.Object3D();
+
+    addTextureCoords(headGeom, 1, 1);
+
+    var sholderGeom = new THREE.CylinderGeometry(0.7,0.7,2,5,32);
+    var sholder = new THREE.Mesh(sholderGeom, handMetalMat);
+
+    var armStartGeom = new THREE.CylinderGeometry(0.8,0.8,2,32);
+    var armStart = new THREE.Mesh(armStartGeom, handMetalMat);
+
+    // var handGeom = new THREE.BoxGeometry(1.4,1.6);
+    //   addTextureCoords(handGeom, 1.5, 1.5);
+    // var hand = new THREE.Mesh(handGeom, handMaterial);
+
+    var wristGeom = new THREE.CylinderGeometry(0.4,0.4,2, 32);
+    var wrist = new THREE.Mesh(wristGeom, yellowMaterial);
+
+    var armGeom = new THREE.ExtrudeGeometry(arm,options4)
+    var armFirst = new THREE.Mesh(armGeom, handMetalMat);
+    var armSecond = armFirst.clone();
+
+
+    // var armFirst = createMesh(new THREE.ExtrudeGeometry(arm,options4));
+    // var armSecond = createMesh(new THREE.ExtrudeGeometry(arm,options4));
+
+    
+    sholder.position.set(0,-0.4,0.6);
+  // hand.position.set(0,0,5.8);
+  // hand.rotation.z = Math.PI/2;
+  wrist.position.set(0,0.4,9.5);
+  wrist.rotation.x= Math.PI/2;
+  
+  var armEnd = new THREE.Object3D();
+  armFirst.rotation.y = Math.PI*2-Math.PI/2;
+  armFirst.position.set(0,0,0);
+
+  armSecond.rotation.y = Math.PI*2-Math.PI/2; 
+  armSecond.position.set(1.6,0,0)
+  armEnd.add(armFirst);
+  armEnd.add(armSecond);
+  armEnd.position.set(0,1,9.7);
+  armStart.position.set(0,0,10.8);
+  armStart.rotation.z = Math.PI/2;
+
+  handArm.add(wrist);
+  handArm.add(armEnd); 
+  handArm.add(armStart);
+  handArm.position.set(0,0,-2.5);
+  handArm.rotation.z =Math.PI*2- Math.PI/2;
+
+
+  var handFaces = createHandwFaces(1.4,2,6);
+  var hand = createTexturedHand(handFaces);
+if (side == 1) {
+hand.rotation.y = Math.PI;
+hand.position.set(1,-1.2,1);
+}
+
+
+  wholeHand.add(hand);
+
+  wholeHand.add(sholder);
+
+  wholeHand.add(handArm);
+  wholeHand.position.set(7.4,-13,4);
+  wholeHand.rotation.x= Math.PI*2 - Math.PI/6;
+
+  return wholeHand;
+}
+
+ var hand = createHand(1);
+ var handLeft = hand.clone();
+ handLeft.rotation.z = Math.PI;
+ handLeft.rotation.y = Math.PI/10;
+ handLeft.position.set(-6,-14,4);
+ scene.add(hand);
+ scene.add(handLeft);
 
 
 
@@ -686,13 +716,7 @@ scene.add(yayHand);
 
  animate();
 
-//  function showCP(cpList) {
-//   for( var i=0; i < cpList.length; i++ ) {
-//     scene.add(TW.createPoint(cpList[i]));
-//   }
-// };
 
-  //showCP(controlPoints);          // optional, for debugging.
   TW.viewFromFront();        
   </script>
 </body>
