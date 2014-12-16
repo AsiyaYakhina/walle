@@ -25,6 +25,10 @@ Final project
   <script src="eyeBase.js"></script>
   <script src="materials.js"></script>
   <script src="createHandwFaces.js"></script>
+  <script src="createStem.js"></script>
+
+
+  
 
 </head>
 <body>
@@ -164,7 +168,7 @@ function createHead() {
 
 var head = createHead();
 head.position.y = -1;
-scene.add(head);
+//scene.add(head);
 
 
 function createNeck() {
@@ -270,7 +274,7 @@ function createNeck() {
 
 wholeNeck = createNeck();
 wholeNeck.position.set(0,0.7,-1);
-scene.add(wholeNeck);
+//scene.add(wholeNeck);
 
 var textureWheel = new THREE.ImageUtils.loadTexture("wheel.jpg", 
   new THREE.UVMapping(),
@@ -628,8 +632,8 @@ function addTextureCoords(boxGeom, maxT, maxS) {
   var handFaces = createHandwFaces(1.4,2,6);
   var hand = createTexturedHand(handFaces);
 
-    hand.rotation.y = Math.PI;
-    hand.position.set(1,-1.2,1);
+  hand.rotation.y = Math.PI;
+  hand.position.set(1,-1.2,1);
 
 
 
@@ -653,10 +657,23 @@ scene.add(handLeft);
 
 var handPivot = new THREE.Object3D();
 handPivot.add(new THREE.Mesh(new THREE.SphereGeometry(0.3), material));
-handPivot.position.set(10,-10,0);
+handPivot.position.set(7,-13,4);
 handPivot.add(hand);
+var stem = createStem();
+hand.add(stem);
+stem.position.set(-2,0,9)
 scene.add(handPivot);
 
+var headPivot = new THREE.Object3D();
+//headPivot.add(new THREE.Mesh(new THREE.SphereGeometry(2), material));
+headPivot.position.set(1,-8,0);
+var neckNhead = new THREE.Object3D();
+neckNhead.add(head);
+neckNhead.add(wholeNeck);
+
+headPivot.add(neckNhead);
+neckNhead.position.set(-1,7.5,0);
+scene.add(headPivot);
 
 
 ambLight= new THREE.AmbientLight( 0xA8A8A8, 0.1);
@@ -696,32 +713,61 @@ sptLight = new THREE.SpotLight( 0x999999,
 
 
   params = {
-    maxHandRotation: Math.PI/2,
-    handMotion1_begin: 20,
-    handMotion1_end: 40,
+    maxHandRotation: Math.PI/3,
+    headMaxRotation: Math.PI/3,
+    headTiltMax: Math.PI/10,
+    headMotion_begin: 1,
+    headMotion_end: 30,
+    handMotion1_begin: 30,
+    handMotion1_end: 60,
+    headTilt_begin:60,
+    headTilt_end:90,
     maxTS: 10
   }
 
   function resetState() {
-      animationState = {
-        handRotation: 0, // fall from highest height
+    animationState = {
+        rotation: 0, // fall from highest height
         time: 0
-    };
-  }
+      };
+    }
 
+
+    function firstState() {
+    resetState();
+    hand.rotation.y=animationState.rotation;
+    neckNhead.rotation.y= animationState.rotation;
+    head.rotation.z=animationState.rotation;
+
+    TW.render();
+}
+
+    function updateHead(ts){
+
+     if (ts>params.headMotion_begin && ts < params.headMotion_end){
+      neckNhead.rotation.y += params.headMaxRotation/ (params.headMotion_end-params.headMotion_begin);
+    }
+  }
   function updateHand(ts){
 
     if (ts>params.handMotion1_begin && ts < params.handMotion1_end){
       hand.rotation.y += params.maxHandRotation/ (params.handMotion1_end-params.handMotion1_begin);
+      stem.rotation.y+= params.maxHandRotation/ (params.handMotion1_end-params.handMotion1_begin);
     }
   }
 
-  function updateHead(ts){
-
+  function updateTilt(ts) {
+    if (ts>params.headTilt_begin && ts < params.headTilt_end){
+      head.rotation.z += params.headTiltMax/ (params.headTilt_end-params.headTilt_begin);
+    }
 
   }
+
   function updateWalle(ts){
+    //console.log("time is " + ts);
+    updateHead(ts);
     updateHand(ts);
+    updateTilt(ts);
 
     // if (ts> params.maxTS){
     //   stopAnimation();
@@ -738,12 +784,12 @@ sptLight = new THREE.SpotLight( 0x999999,
 var animationId = null;
 
 
-  function animateScene() {
-    updateState();
-    animationId = requestAnimationFrame( animateScene );
-    renderer.render(scene, state.cameraObject);
- 
-  }
+function animateScene() {
+  updateState();
+  animationId = requestAnimationFrame( animateScene );
+  renderer.render(scene, state.cameraObject);
+
+}
 
 function animate() {
   animationId = requestAnimationFrame( animate );
@@ -753,20 +799,20 @@ function animate() {
 Stops the animation if it's started.
 */
 function stopAnimation() {
-  
+
   if (animationId != null) {
     cancelAnimationFrame(animationId);
   }
 }
 
-  function render() {
-   glassEyeL.visible = false;
-   glassEyeR.visible = false;
+function render() {
+ glassEyeL.visible = false;
+ glassEyeR.visible = false;
 
-   glassEyeCamL.updateCubeMap(renderer, scene);
-   glassEyeCamR.updateCubeMap(renderer, scene);
-   glassEyeL.visible = true;
-   glassEyeR.visible = true;
+ glassEyeCamL.updateCubeMap(renderer, scene);
+ glassEyeCamR.updateCubeMap(renderer, scene);
+ glassEyeL.visible = true;
+ glassEyeR.visible = true;
    renderer.render(scene, state.cameraObject); //re-render the scene using the TW camera
    
 
@@ -774,7 +820,8 @@ function stopAnimation() {
 
  animate();
 
-TW.setKeyboardCallback("g",animateScene,"go:  start animation");
+ TW.setKeyboardCallback("g",animateScene,"go:  start animation");
+ TW.setKeyboardCallback("0",firstState,"reset animation");
 
  TW.viewFromFront();        
  </script>

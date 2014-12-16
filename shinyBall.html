@@ -30,6 +30,8 @@ http://www.lab4games.net/zz85/blog/2014/09/08/rendering-lines-and-bezier-curves-
     <script src="http://cs.wellesley.edu/~cs307/threejs/dirksen/libs/ThreeBSP.js"></script>
     <script src="marble.js"></script>
     <script src="materials.js"></script>
+     <script src="eyeBase.js"></script>
+
 
 
   </head>
@@ -60,65 +62,54 @@ function render() {
 
 }
 
-var textureWheel = new THREE.ImageUtils.loadTexture("wheel.jpg", 
-    new THREE.UVMapping(),
-    function () {
-      console.log("eyeTexture is loaded.");
-      imageLoaded = true;
-      TW.render();
-    });
 
 
-
-  textureWheel.wrapS = textureWheel.wrapT = THREE.MirroredRepeatWrapping;
-   textureWheel.repeat.set( 2, 2);
-  // textureWheel.offset.set( 0.8, 0.9 );
-
-
-  var wheelMaterial = new THREE.MeshPhongMaterial(
-    { color: 0x898989,
-      specular:0xFFFFFF,
-      shininess: 0,
-      map: textureWheel,
-      side: THREE.DoubleSide,
-      castShadow: true
-    });
-
-function createWheel () {
-
-var wheel = new THREE.Object3D();
-  var surfPoints1 = [[ [ -2,7,0],  [-2,7,2], [-2,4,7], [-2,2,7] ],
-                      [ [-1,7,0], [-1,7,2],  [-1,4,7], [-1,2,7] ],
-                      [ [0,7,0], [0,7,2],  [0,4,7],  [0,2,7] ],
-                      [ [2,7,0],  [2,7,2],  [2,4,7],  [2,2,7] ] ];
+function createStem() {
+var greenMat = new THREE.MeshBasicMaterial({color: 0x50DB1F,
+side: THREE.DoubleSide});
 
 
-
-  var surfPoints2 = [ [ [-2,2,7],  [-2,0,7], [-2,0,-7], [-2,2,-7] ],
-                    [ [-1,2,7], [-1,0,7],  [-1,0,-7], [-1,2,-7] ],
-                    [ [0,2,7], [0,0,7],  [0,0,-7],  [0,2,-7] ],
-                    [ [2,2,7],  [2,0,7],  [2,0,-7],  [2,2,-7] ] ];
-
+var leafPoints = [ [ [0,0,0],  [1,-2,3], [3,-2.5,4], [5,-0.5,0] ],
+[ [0,0,0], [1,-1.5,2],  [3,-2,3], [5,-0.5,0] ],
+[ [0,0,0], [1,-1.5,-2],  [3,-2,-3],  [5,-0.5,0] ],
+[ [0,0,0],  [1,-2,-3],  [3,-2.5,-4],  [5,-0.5,0] ] ];
 
 
-   var surfGeom1 = new THREE.BezierSurfaceGeometry( surfPoints1.reverse(), 60, 60 );
-  var surfGeom2 = new THREE.BezierSurfaceGeometry(surfPoints2.reverse(), 60,60);
-  
-  var eyeCov1 = new THREE.SceneUtils.createMultiMaterialObject(surfGeom1, [wheelMaterial]);
+var leafGeom = new THREE.BezierSurfaceGeometry( leafPoints.reverse(), 30, 30 );
 
-   var eyeCov2 = new THREE.SceneUtils.createMultiMaterialObject(surfGeom2, [wheelMaterial]);
 
-var curve3 = eyeCov1.clone();
-curve3.rotation.y= Math.PI;
-wheel.add(eyeCov1);
-wheel.add(eyeCov2);
-wheel.add(curve3);
+var leaf = new THREE.Mesh(leafGeom, greenMat);
+leaf.rotation.x= Math.PI;
+var leaf2 = leaf.clone(); 
+leaf.rotation.y=Math.PI;
+leaf.position.set(-1,5,0);
+leaf2.position.set(0.5,9.5,0);
 
-return wheel;
+
+// eyeBase.add(eyeCov1);
+// eyeBase.add(eyeCov2);
+// eyeBase.add(eyeCov3);
+
+var points = [];
+  points.push(new THREE.Vector3(0,0,0));
+  points.push(new THREE.Vector3(1,4,0));
+  points.push(new THREE.Vector3(-1,6,0));
+  points.push(new THREE.Vector3(1,10,0));
+
+
+var stemGeom =  new THREE.TubeGeometry(new THREE.SplineCurve3(points), 64, 0.5, 10, false);
+   
+
+var stem = new THREE.Mesh(stemGeom, greenMat);
+
+var fullStem = new THREE.Object3D();
+fullStem.add(leaf);
+fullStem.add(leaf2);
+fullStem.add(stem);
+
+return fullStem;
 }
 
-var wheel = createWheel();
-scene.add(wheel);
 
 var ambLight = new THREE.AmbientLight(0xFFFFFF); // soft white light 
 ambLight.name = "ambient";
