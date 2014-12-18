@@ -1,5 +1,14 @@
 function createEve() {
-var eveMat = new THREE.MeshBasicMaterial({ color: 0xFFFFFF, side: THREE.DoubleSide });
+var eveMat = new THREE.MeshPhongMaterial({ 
+      color: 0xEF0F0FB,
+      ambient: 0xF0F0FB,
+      specular:0xFFFFFF,
+      shininess: 0,
+      map: faceTexture,
+      side: THREE.DoubleSide
+  
+
+ });
 
 var faceTexture = new THREE.ImageUtils.loadTexture("eveFace.jpg", 
     new THREE.UVMapping(),
@@ -9,17 +18,12 @@ var faceTexture = new THREE.ImageUtils.loadTexture("eveFace.jpg",
       TW.render();
     });
 
-  //textureEyeCover.wrapS = textureEyeCover.wrapT = THREE.MirroredRepeatWrapping;
- //  faceTexture.repeat.set( 1 / 5, 1 / 5 );
- // faceTexture.offset.set( 0.8, 0.9 );
-
-
   var faceMat = new THREE.MeshPhongMaterial(
     { color: 0x898989,
       specular:0xFFFFFF,
       shininess: 0,
       map: faceTexture,
-      side: THREE.DoubleSide,
+      side: THREE.BackSide
   
     });
 
@@ -48,7 +52,7 @@ halfEve2.rotation.y= Math.PI;
 var halfHeadGeom = new THREE.BezierSurfaceGeometry( headPoints.reverse(), 80, 80 );
 
 var halfHead = new THREE.Mesh(halfHeadGeom, faceMat);
-var half2Head = halfHead.clone();
+var half2Head = new THREE.Mesh(halfHeadGeom, eveMat);
 half2Head.rotation.y= Math.PI;
 
 var eve = new THREE.Object3D();
