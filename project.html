@@ -26,6 +26,7 @@ Final project
   <script src="materials.js"></script>
   <script src="createHandwFaces.js"></script>
   <script src="createStem.js"></script>
+  <script src="createEve.js"></script>
 
   
 
@@ -679,6 +680,10 @@ return wallE;
 var wallE = createWallE();
 wallE.position.set(0,0,-10);
 scene.add(wallE);
+
+
+var eve = createEve();
+scene.add(eve);
 
 scene.fog = new THREE.FogExp2( 0xc9b195, 0.007 );
 scene.fog.near = 30;
