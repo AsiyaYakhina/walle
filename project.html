@@ -334,12 +334,12 @@ textureWheel.repeat.set( 3, 1);
     return wheel;
   }
 
-// var wheelL = createWheel();
-// wheelL.position.set(-7,-22,0)
-// wheelR = createWheel();
-// wheelR.position.set(9,-22,0)
-// scene.add(wheelL);
-// scene.add(wheelR);
+var wheelL = createWheel();
+wheelL.position.set(-7,-22,0)
+wheelR = createWheel();
+wheelR.position.set(9,-22,0)
+scene.add(wheelL);
+scene.add(wheelR);
 
 
 function addTextureCoords(boxGeom, maxT, maxS) {
@@ -661,7 +661,7 @@ handPivot.position.set(7,-13,4);
 handPivot.add(hand);
 var stem = createStem();
 hand.add(stem);
-stem.position.set(-2,0,9)
+stem.position.set(-2,0,9);
 scene.add(handPivot);
 
 var headPivot = new THREE.Object3D();
@@ -718,10 +718,10 @@ sptLight = new THREE.SpotLight( 0x999999,
     headTiltMax: Math.PI/10,
     headMotion_begin: 1,
     headMotion_end: 30,
-    handMotion1_begin: 30,
-    handMotion1_end: 60,
-    headTilt_begin:60,
-    headTilt_end:90,
+    handMotion1_begin: 20,
+    handMotion1_end: 50,
+    headTilt_begin:40,
+    headTilt_end:60,
     maxTS: 10
   }
 
