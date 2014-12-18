@@ -17,7 +17,7 @@ Final project
   </style>
   <script src="http://cs.wellesley.edu/~cs307/threejs/libs/three.min.js"></script>
   <script src="http://cs.wellesley.edu/~cs307/threejs/libs/OrbitControls.js"></script>
-  <script src="http://cs.wellesley.edu/~cs307/threejs/libs/tw.js"></script>
+  <script src="tw.js"></script>
   <script src="http://cs.wellesley.edu/~cs307/threejs/libs/dat.gui.min.js"></script>
   <script src="http://cs.wellesley.edu/~cs307/threejs/dirksen/libs/spin.js"></script>
   <script src="http://cs.wellesley.edu/~cs307/threejs/dirksen/libs/ThreeBSP.js"></script>
@@ -26,7 +26,6 @@ Final project
   <script src="materials.js"></script>
   <script src="createHandwFaces.js"></script>
   <script src="createStem.js"></script>
-
 
   
 
@@ -37,17 +36,6 @@ Final project
 
   var renderer = new THREE.WebGLRenderer();
   //renderer.shadowMapEnabled = true;
-  renderer.shadowMapSoft = true;
-
-  renderer.shadowCameraNear = 1;
-  renderer.shadowCameraFar = 70;
-  renderer.shadowCameraFov = 50;
-
-  renderer.shadowMapBias = 0.0039;
-  renderer.shadowMapDarkness = 0.5;
-  renderer.shadowMapWidth = 10;
-  renderer.shadowMapHeight = 10;
-
 
   var animationState; //global to keep track of changes in penguin's position
 
@@ -67,34 +55,61 @@ Final project
 
   var scene = new THREE.Scene(); 
   TW.mainInit(renderer,scene);
-  var size = 2;
-  var state = TW.cameraSetup(renderer,scene, {minx:-10,maxx:10,miny:-30,maxy:20,minz:0,maxz:0});
 
-// DELETE LATER
-var material = new THREE.MeshBasicMaterial( { color: 0xffff00 } ); 
-var material2 = new THREE.MeshBasicMaterial({color: 0xDC630A});
+  var state = TW.cameraSetup(renderer,scene, {minx:-10,maxx:10,miny:-30,maxy:20,minz:0,maxz:0}, 2, 600);
+  state.cameraObject.near= 0;
+  state.cameraObject.far = 500;
 
-
-
-function createEyeFront(glassEye, glassCam) {
-  var eyeFront = new THREE.Object3D();
-
-
-  glassEye.scale.z = 0.7;
+  var groundTexture = new THREE.ImageUtils.loadTexture("ground.jpg", 
+    new THREE.UVMapping(),
+    function () {
+      console.log("ground.jpg is loaded.");
+      imageLoaded = true;
+      TW.render();
+    });
 
 
-  var eyeBigCircGeom = new THREE.TorusGeometry( 1.9, 0.1, 16, 100 ); 
-  var eyeBigCirc = new THREE.Mesh( eyeBigCircGeom,steelMaterial );
-  eyeBigCirc.position.set(-2.5, 0.8,5 );
+  groundTexture.wrapS = groundTexture.wrapT =THREE.MirroredRepeatWrapping;
 
-  var eyeBorderGeom = new THREE.TorusGeometry(1, 0.1, 16, 100);
-  var eyeBorder = new THREE.Mesh(eyeBorderGeom, steelMaterial);
-  eyeBorder.position.set(-2.5,1,5.1);
+  var groundMat = new THREE.MeshPhongMaterial(
+    { color: 0x898989,
+      specular:0xFFFFFF,
+      shininess: 0,
+      map: groundTexture,
+    });
 
 
-  var eyeLightPartGeom = new THREE.CircleGeometry(1,100);
-  eyeLightPart = new THREE.Mesh(eyeLightPartGeom, eyeLightMaterial);
-  eyeLightPart.position.set(-2.5,1,5.1);
+  var groundGeom = new THREE.PlaneGeometry(300,300);
+  updateQuadTextureParams(groundGeom, 0, 10, 0, 10)
+  var ground = new THREE.Mesh(groundGeom, groundMat);
+  ground.rotation.x = -Math.PI/2;
+  ground.position.set(0,-21.6,-70);
+  scene.add(ground);
+
+  var backgroundGeom = new THREE.CylinderGeometry(130,130,250,60,60,true);
+  backgroundMat = new THREE.MeshBasicMaterial({color: 0xc9b195, side: THREE.BackSide});
+  var background = new THREE.Mesh(backgroundGeom, backgroundMat);
+  background.position.set(0,50,-60);
+  scene.add(background);
+
+
+
+  function createEyeFront(glassEye, glassCam) {
+    var eyeFront = new THREE.Object3D();
+    glassEye.scale.z = 0.7;
+
+    var eyeBigCircGeom = new THREE.TorusGeometry( 1.9, 0.1, 16, 100 ); 
+    var eyeBigCirc = new THREE.Mesh( eyeBigCircGeom,steelMaterial );
+    eyeBigCirc.position.set(-2.5, 0.8,5 );
+
+    var eyeBorderGeom = new THREE.TorusGeometry(1, 0.1, 16, 100);
+    var eyeBorder = new THREE.Mesh(eyeBorderGeom, steelMaterial);
+    eyeBorder.position.set(-2.5,1,5.1);
+
+
+    var eyeLightPartGeom = new THREE.CircleGeometry(1,100);
+    eyeLightPart = new THREE.Mesh(eyeLightPartGeom, eyeLightMaterial);
+    eyeLightPart.position.set(-2.5,1,5.1);
   // scene.add(eyeLightPart);
 
 
@@ -124,18 +139,18 @@ function createEyeFront(glassEye, glassCam) {
 
 }
 
-var glassEyeL;
-var glassEyeCamL; 
-var glassEyeR;
-var glassEyeCamR; 
+// var glassEyeL;
+// var glassEyeCamL; 
+// var glassEyeR;
+// var glassEyeCamR; 
 
-var marbleSet1 = createMarble(0x524CFD, 0x444444, 5, 1.9);
-glassEyeL = marbleSet1[0];
-glassEyeCamL = marbleSet1[1];
+// var marbleSet1 = createMarble(0x524CFD, 0x444444, 5, 1.9);
+// glassEyeL = marbleSet1[0];
+// glassEyeCamL = marbleSet1[1];
 
-var marbleSet2 = createMarble(0x524CFD, 0x444444, 5, 1.9);
-glassEyeR = marbleSet2[0];
-glassEyeCamR = marbleSet2[1];
+// var marbleSet2 = createMarble(0x524CFD, 0x444444, 5, 1.9);
+// glassEyeR = marbleSet2[0];
+// glassEyeCamR = marbleSet2[1];
 
 function createHead() {
   var head = new THREE.Object3D();
@@ -165,10 +180,6 @@ function createHead() {
 
   return head;
 }
-
-var head = createHead();
-head.position.y = -1;
-//scene.add(head);
 
 
 function createNeck() {
@@ -272,8 +283,8 @@ function createNeck() {
   return wholeNeck;
 }
 
-wholeNeck = createNeck();
-wholeNeck.position.set(0,0.7,-1);
+// wholeNeck = createNeck();
+// wholeNeck.position.set(0,0.7,-1);
 //scene.add(wholeNeck);
 
 var textureWheel = new THREE.ImageUtils.loadTexture("wheel.jpg", 
@@ -334,12 +345,12 @@ textureWheel.repeat.set( 3, 1);
     return wheel;
   }
 
-var wheelL = createWheel();
-wheelL.position.set(-7,-22,0)
-wheelR = createWheel();
-wheelR.position.set(9,-22,0)
-scene.add(wheelL);
-scene.add(wheelR);
+// var wheelL = createWheel();
+// wheelL.position.set(-7,-22,0)
+// wheelR = createWheel();
+// wheelR.position.set(9,-22,0)
+// scene.add(wheelL);
+// scene.add(wheelR);
 
 
 function addTextureCoords(boxGeom, maxT, maxS) {
@@ -369,164 +380,90 @@ function addTextureCoords(boxGeom, maxT, maxS) {
 
     }
 
-
-    var arm = new THREE.Shape();
-    arm.moveTo(1.4,-0.31);
-    arm.lineTo(3,-2);
-    arm.lineTo(3, -4);
-    arm.lineTo(2.5, -4);
-    arm.lineTo(2.5,-2);
-    arm.lineTo(1,-1.9);
-
-
-
-    var neckPoints = [];
-    neckPoints.push(new THREE.Vector3(0,0.5,0));
-    neckPoints.push(new THREE.Vector3(1, -0.8, 0));
-    neckPoints.push(new THREE.Vector3(0.8, -1.75,0));
-    neckPoints.push(new THREE.Vector3(0, -2,0));
-
-    var neckPoints2 = [];
-    neckPoints2.push(new THREE.Vector3(0,0.5,0));
-    neckPoints2.push(new THREE.Vector3(-1, -0.8, 0));
-    neckPoints2.push(new THREE.Vector3(-0.8, -1.75,0));
-    neckPoints2.push(new THREE.Vector3(0, -2,0));
+    function updateQuadTextureParams(quad, sMin, sMax, tMin, tMax) {
+    var elt = quad.faceVertexUvs[0]; // dunno why they have this 1-elt array
+    var face0 = elt[0];
+    face0[0] = new THREE.Vector2(sMin,tMax);
+    face0[1] = new THREE.Vector2(sMin,tMin);
+    face0[2] = new THREE.Vector2(sMax,tMax);
+    var face1 = elt[1];
+    face1[0] = new THREE.Vector2(sMin,tMin);
+    face1[1] = new THREE.Vector2(sMax,tMin);
+    face1[2] = new THREE.Vector2(sMax,tMax);
+   // printTextureParams(quad);
+   quad.uvsNeedUpdate = true;
+ }
 
 
-    var bodyBoxGeom = new THREE.BoxGeometry(12,10,12);
-    addTextureCoords(bodyBoxGeom, 5, 5);
-    var bodyBox = new THREE.Mesh(bodyBoxGeom, yellowMaterial);
-
-
-    var options = {
-      amount: 5,
-      bevelThickness: 0,
-      bevelSize: 0,
-      bevelSegments: 3,
-      bevelEnabled: false,
-      curveSegments: 12,
-      steps: 1
-    };
-
-    var options2 = {
-      amount: 2,
-      bevelThickness: 0,
-      bevelSize: 0,
-      bevelSegments: 3,
-      bevelEnabled: false,
-      curveSegments: 12,
-      steps: 1
-    };
-    var options3 = {
-      amount: 14,
-      bevelThickness: 0,
-      bevelSize: 0,
-      bevelSegments: 0,
-      bevelEnabled: false,
-      curveSegments: 0,
-      steps: 1
-    };
-
-    var options4 = {
-      amount: 1.4,
-      bevelThickness: 0,
-      bevelSize: 0,
-      bevelSegments: 0,
-      bevelEnabled: false,
-      curveSegments: 0,
-      steps: 1
-    };
+ var arm = new THREE.Shape();
+ arm.moveTo(1.4,-0.31);
+ arm.lineTo(3,-2);
+ arm.lineTo(3, -4);
+ arm.lineTo(2.5, -4);
+ arm.lineTo(2.5,-2);
+ arm.lineTo(1,-1.9);
 
 
 
+ var neckPoints = [];
+ neckPoints.push(new THREE.Vector3(0,0.5,0));
+ neckPoints.push(new THREE.Vector3(1, -0.8, 0));
+ neckPoints.push(new THREE.Vector3(0.8, -1.75,0));
+ neckPoints.push(new THREE.Vector3(0, -2,0));
+
+ var neckPoints2 = [];
+ neckPoints2.push(new THREE.Vector3(0,0.5,0));
+ neckPoints2.push(new THREE.Vector3(-1, -0.8, 0));
+ neckPoints2.push(new THREE.Vector3(-0.8, -1.75,0));
+ neckPoints2.push(new THREE.Vector3(0, -2,0));
 
 
-    function modifyTextureParams(geometry, numX, numY) {
-      var f, faces = geometry.faces, len = faces.length;
-      var UVs = geometry.faceVertexUvs[0];
-      // var back = new THREE.Vector3(0,0,-1);
-      for( f=0; f < len; f++ ) {
-            // console.log("modifying face "+f);
-            // modify the s, which is x here
-            var face = UVs[f];
-            face[0].x = face[0].x*numX
-            face[1].x = face[1].x*numX
-            face[2].x = face[2].x*numX
-            face[0].y = face[0].y*numY
-            face[1].y = face[1].y*numY
-            face[2].y = face[2].y*numY
-          }
-          geometry.uvsNeedUpdate = true;
-        }
+ var options = {
+  amount: 5,
+  bevelThickness: 0,
+  bevelSize: 0,
+  bevelSegments: 3,
+  bevelEnabled: false,
+  curveSegments: 12,
+  steps: 1
+};
+
+var options2 = {
+  amount: 2,
+  bevelThickness: 0,
+  bevelSize: 0,
+  bevelSegments: 3,
+  bevelEnabled: false,
+  curveSegments: 12,
+  steps: 1
+};
+var options3 = {
+  amount: 14,
+  bevelThickness: 0,
+  bevelSize: 0,
+  bevelSegments: 0,
+  bevelEnabled: false,
+  curveSegments: 0,
+  steps: 1
+};
+
+var options4 = {
+  amount: 1.4,
+  bevelThickness: 0,
+  bevelSize: 0,
+  bevelSegments: 0,
+  bevelEnabled: false,
+  curveSegments: 0,
+  steps: 1
+};
 
 
+var mats = new THREE.MeshFaceMaterial(
 
-        function createMeshTube(geom) {
+  [ yellowMaterial,
+  handMaterial]);
 
-              // assign two materials
-              //var meshMaterial = new THREE.MeshNormalMaterial();
-              var meshMaterial = new THREE.MeshBasicMaterial({color: 0x00ff00, transparent: true, opacity: 0.2});
-
-              var wireFrameMat = new THREE.MeshBasicMaterial();
-              wireFrameMat.wireframe = true;
-
-              // create a multimaterial
-              var mesh = THREE.SceneUtils.createMultiMaterialObject(geom, [meshMaterial, wireFrameMat]);
-
-              return mesh;
-            }
-
-
-            function createMesh(geom) {
-
-              geom.applyMatrix(new THREE.Matrix4().makeTranslation(-20, 0, 0));
-
-              // assign two materials
-              var meshMaterial = new THREE.MeshNormalMaterial({transparent: true, opacity: 0.7});
-
-              //  meshMaterial.side = THREE.DoubleSide;
-              var wireFrameMat = new THREE.MeshBasicMaterial();
-              wireFrameMat.wireframe = true;
-
-              // create a multimaterial
-              var mesh = THREE.SceneUtils.createMultiMaterialObject(geom, [meshMaterial]);
-
-              return mesh;
-            }
-
-
-
-
-  //eyeSecond.rotation.z = Math.PI*2 - Math.PI/6;
-
-  // neckDetail.rotation.y = 2*Math.PI-Math.PI/2;
-  // neckDetail.rotation.x =2*Math.PI- Math.PI/6;
-  // neckDetail.position.set(2,8.5,18);
-
-
-  
-  //glassBall.scale.z = 0.8;
-  // sphereCamera.position.set(10, 50, 25);
-
-  //glassBallCam.position
-  //eyeBallOne.scale.z= 0.7;
-  //eyeBallOne.position.set(-2.5, 0.8,5);
-  //eyeBallTwo.scale.z= 0.7;
-  //eyeBallTwo.position.set(4.1, 1.2,5);
-
-
-  bodyBox.position.set(1,-14,0);
-
-
-
-
-
-  var mats = new THREE.MeshFaceMaterial(
-
-    [ yellowMaterial,
-    handMaterial]);
-
-  function createTexturedHand (handGeom) {
+function createTexturedHand (handGeom) {
     //setting material indexes for the faces
 
     //putting the brick texture on the front and the back of the barn
@@ -588,120 +525,182 @@ function addTextureCoords(boxGeom, maxT, maxS) {
     var armStartGeom = new THREE.CylinderGeometry(0.8,0.8,2,32);
     var armStart = new THREE.Mesh(armStartGeom, handMetalMat);
 
-    // var handGeom = new THREE.BoxGeometry(1.4,1.6);
-    //   addTextureCoords(handGeom, 1.5, 1.5);
-    // var hand = new THREE.Mesh(handGeom, handMaterial);
-
     var wristGeom = new THREE.CylinderGeometry(0.4,0.4,2,32);
     var wrist = new THREE.Mesh(wristGeom, yellowMaterial);
 
     var armGeom = new THREE.ExtrudeGeometry(arm,options4)
     var armFirst = new THREE.Mesh(armGeom, handMetalMat);
     var armSecond = armFirst.clone();
-
-
-    // var armFirst = createMesh(new THREE.ExtrudeGeometry(arm,options4));
-    // var armSecond = createMesh(new THREE.ExtrudeGeometry(arm,options4));
-
     
     sholder.position.set(0,-0.4,0.6);
-  // hand.position.set(0,0,5.8);
-  // hand.rotation.z = Math.PI/2;
-  wrist.position.set(0,0.4,9.5);
-  wrist.rotation.x= Math.PI/2;
-  
-  var armEnd = new THREE.Object3D();
-  armFirst.rotation.y = Math.PI*2-Math.PI/2;
-  armFirst.position.set(0,0,0);
 
-  armSecond.rotation.y = Math.PI*2-Math.PI/2; 
-  armSecond.position.set(1.6,0,0)
-  armEnd.add(armFirst);
-  armEnd.add(armSecond);
-  armEnd.position.set(0,1,9.7);
-  armStart.position.set(0,0,10.8);
-  armStart.rotation.z = Math.PI/2;
+    wrist.position.set(0,0.4,9.5);
+    wrist.rotation.x= Math.PI/2;
 
-  handArm.add(wrist);
-  handArm.add(armEnd); 
-  handArm.add(armStart);
-  handArm.position.set(0,0,-2.5);
-  handArm.rotation.z =Math.PI*2- Math.PI/2;
+    var armEnd = new THREE.Object3D();
+    armFirst.rotation.y = Math.PI*2-Math.PI/2;
+    armFirst.position.set(0,0,0);
 
+    armSecond.rotation.y = Math.PI*2-Math.PI/2; 
+    armSecond.position.set(1.6,0,0)
+    armEnd.add(armFirst);
+    armEnd.add(armSecond);
+    armEnd.position.set(0,1,9.7);
+    armStart.position.set(0,0,10.8);
+    armStart.rotation.z = Math.PI/2;
 
-  var handFaces = createHandwFaces(1.4,2,6);
-  var hand = createTexturedHand(handFaces);
-
-  hand.rotation.y = Math.PI;
-  hand.position.set(1,-1.2,1);
+    handArm.add(wrist);
+    handArm.add(armEnd); 
+    handArm.add(armStart);
+    handArm.position.set(0,0,-2.5);
+    handArm.rotation.z =Math.PI*2- Math.PI/2;
 
 
+    var handFaces = createHandwFaces(1.4,2,6);
+    var hand = createTexturedHand(handFaces);
 
-  wholeHand.add(hand);
+    hand.rotation.y = Math.PI;
+    hand.position.set(1,-1.2,1);
 
-  wholeHand.add(sholder);
 
-  wholeHand.add(handArm);
-  wholeHand.rotation.x= Math.PI*2 - Math.PI/6;
 
-  return wholeHand;
-}
+    wholeHand.add(hand);
 
-var hand = createHand();
-var handLeft = hand.clone();
-handLeft.rotation.z = Math.PI;
-handLeft.rotation.y = Math.PI/10;
-handLeft.position.set(-6,-14,4);
+    wholeHand.add(sholder);
 
-scene.add(handLeft);
+    wholeHand.add(handArm);
+    wholeHand.rotation.x= Math.PI*2 - Math.PI/6;
 
-var handPivot = new THREE.Object3D();
-handPivot.add(new THREE.Mesh(new THREE.SphereGeometry(0.3), material));
-handPivot.position.set(7,-13,4);
-handPivot.add(hand);
-var stem = createStem();
-hand.add(stem);
-stem.position.set(-2,0,9);
-scene.add(handPivot);
+    return wholeHand;
+  }
 
-var headPivot = new THREE.Object3D();
+//   var hand = createHand();
+//   var handLeft = hand.clone();
+//   handLeft.rotation.z = Math.PI;
+//   handLeft.rotation.y = Math.PI/10;
+//   handLeft.position.set(-6,-14,4);
+
+//   scene.add(handLeft);
+
+//   var handPivot = new THREE.Object3D();
+//   handPivot.position.set(7,-13,4);
+//   handPivot.add(hand);
+//   var stem = createStem();
+//   hand.add(stem);
+//   stem.position.set(-2,0,9);
+//   scene.add(handPivot);
+
+//   var headPivot = new THREE.Object3D();
+// //headPivot.add(new THREE.Mesh(new THREE.SphereGeometry(2), material));
+// headPivot.position.set(1,-8,0);
+// var neckNhead = new THREE.Object3D();
+// neckNhead.add(head);
+// neckNhead.add(wholeNeck);
+
+// headPivot.add(neckNhead);
+// neckNhead.position.set(-1,7.5,0);
+// scene.add(headPivot);
+
+var glassEyeL;
+var glassEyeCamL; 
+var glassEyeR;
+var glassEyeCamR;
+var neckNhead;
+var hand;
+var head;
+var stem;
+
+function createWallE() {
+var wallE = new THREE.Object3D();
+
+
+var marbleSet1 = createMarble(0x524CFD, 0x444444, 5, 1.9);
+glassEyeL = marbleSet1[0];
+glassEyeCamL = marbleSet1[1];
+
+var marbleSet2 = createMarble(0x524CFD, 0x444444, 5, 1.9);
+glassEyeR = marbleSet2[0];
+glassEyeCamR = marbleSet2[1];
+
+
+
+ var bodyBoxGeom = new THREE.BoxGeometry(12,10,12);
+ addTextureCoords(bodyBoxGeom, 5, 5);
+ var bodyBox = new THREE.Mesh(bodyBoxGeom, yellowMaterial);
+ bodyBox.position.set(1,-14,0);
+
+head = createHead();
+head.position.y = -1;
+
+wholeNeck = createNeck();
+wholeNeck.position.set(0,0.7,-1);
+
+var wheelL = createWheel();
+wheelL.position.set(-7,-22,0)
+wheelR = createWheel();
+wheelR.position.set(9,-22,0)
+wallE.add(wheelL); // add to wallE
+wallE.add(wheelR);
+
+  hand = createHand();
+  var handLeft = hand.clone();
+  handLeft.rotation.z = Math.PI;
+  handLeft.rotation.y = Math.PI/10;
+  handLeft.position.set(-6,-14,4);
+
+  wallE.add(handLeft);
+
+  var handPivot = new THREE.Object3D();
+  handPivot.position.set(7,-13,4);
+  handPivot.add(hand);
+  stem = createStem();
+  hand.add(stem);
+  stem.position.set(-2,0,9);
+  wallE.add(handPivot);
+
+  var headPivot = new THREE.Object3D();
 //headPivot.add(new THREE.Mesh(new THREE.SphereGeometry(2), material));
 headPivot.position.set(1,-8,0);
-var neckNhead = new THREE.Object3D();
+neckNhead = new THREE.Object3D();
 neckNhead.add(head);
 neckNhead.add(wholeNeck);
 
 headPivot.add(neckNhead);
 neckNhead.position.set(-1,7.5,0);
-scene.add(headPivot);
+wallE.add(headPivot);
+wallE.add(bodyBox);
+
+return wallE;
 
 
-ambLight= new THREE.AmbientLight( 0xA8A8A8, 0.1);
+}
+
+
+var wallE = createWallE();
+wallE.position.set(0,0,-10);
+scene.add(wallE);
+
+scene.fog = new THREE.FogExp2( 0xc9b195, 0.007 );
+scene.fog.near = 30;
+
+
+ambLight= new THREE.AmbientLight( 0xA8A8A8, 0.01);
 
 
 sptLight = new THREE.SpotLight( 0x999999, 
-               2,               //params.spotLightIntensity,
+               0.7,               //params.spotLightIntensity,
               300, //params.spotLightDistance,
               2,//params.spotLightAngle,
               20             //params.spotLightExp
               ); 
                    // positioning the bottom spotlight
                    sptLight.position.set( 0,50,-10);
-                   sptLight.shadowCameraNear = 0.1;
-                   sptLight.castShadow = true;             
-
-                   sptLight.shadowDarkness = 0.5;
-                   sptLight.shadowCameraVisible = true;
-                   sptLight.shadowCameraTop = 0.5;
-
+                   
 
                    dirLight = new THREE.DirectionalLight(0xC2C2C2, 0.4);
           //setting up the light at a direction which will fall on the back, left walls and the floor
           dirLight.position.set(0.5, 1, 1);
-          dirLight.castShadow = true;             
 
-          dirLight.shadowDarkness = 0.5;
-          dirLight.shadowCameraVisible = true;
 
 
   //wholeHand.position()
@@ -709,9 +708,7 @@ sptLight = new THREE.SpotLight( 0x999999,
   scene.add(sptLight);
   scene.add(dirLight);
 
-  scene.add(bodyBox);
-
-
+ 
   params = {
     maxHandRotation: Math.PI/3,
     headMaxRotation: Math.PI/3,
@@ -734,13 +731,13 @@ sptLight = new THREE.SpotLight( 0x999999,
 
 
     function firstState() {
-    resetState();
-    hand.rotation.y=animationState.rotation;
-    neckNhead.rotation.y= animationState.rotation;
-    head.rotation.z=animationState.rotation;
+      resetState();
+      hand.rotation.y=animationState.rotation;
+      neckNhead.rotation.y= animationState.rotation;
+      head.rotation.z=animationState.rotation;
 
-    TW.render();
-}
+      TW.render();
+    }
 
     function updateHead(ts){
 

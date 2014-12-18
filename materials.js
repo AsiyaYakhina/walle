@@ -201,6 +201,37 @@ var textureHandMet = new THREE.ImageUtils.loadTexture("handMetal.jpg",
     });
 
 
+var groundTexture = new THREE.ImageUtils.loadTexture("ground.jpg", 
+    new THREE.UVMapping(),
+    function () {
+      console.log("ground.jpg is loaded.");
+      imageLoaded = true;
+      TW.render();
+    });
+
+var groundBump = new THREE.ImageUtils.loadTexture("groundBump.jpg", 
+    new THREE.UVMapping(),
+    function () {
+      console.log("groundBump.jpg is loaded.");
+      imageLoaded = true;
+      TW.render();
+    });
+
+
+
+  groundTexture.wrapS = groundTexture.wrapT =THREE.MirroredRepeatWrapping;
+  groundBump.wrapS = groundBump.wrapT =THREE.MirroredRepeatWrapping;
+
+
+  var groundMat = new THREE.MeshPhongMaterial(
+    { color: 0x898989,
+      specular:0xFFFFFF,
+      shininess: 0,
+      map: groundTexture,
+      bumpMap: groundBump
+
+      });
+
 
   //  var textureYellowDetail = new THREE.ImageUtils.loadTexture("yellowDetail.jpg", 
   //     new THREE.UVMapping(),
