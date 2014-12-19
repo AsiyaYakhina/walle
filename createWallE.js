@@ -1,100 +1,5 @@
 
 
-  <!-- 
-Asiya Yakhina
-Final project
--->
-<html>
-<head>
-  <title>Heart Curve</title>
-  <style>      
-  canvas {
-    display: block;
-    margin: 10px auto;
-    width: 80%;
-    height: 750px;
-  }
-  </style>
-  <script src="http://cs.wellesley.edu/~cs307/threejs/libs/three.min.js"></script>
-  <script src="http://cs.wellesley.edu/~cs307/threejs/libs/OrbitControls.js"></script>
-  <script src="tw.js"></script>
-  <script src="http://cs.wellesley.edu/~cs307/threejs/libs/dat.gui.min.js"></script>
-  <script src="http://cs.wellesley.edu/~cs307/threejs/dirksen/libs/spin.js"></script>
-  <script src="http://cs.wellesley.edu/~cs307/threejs/dirksen/libs/ThreeBSP.js"></script>
-  <script src="marble.js"></script>
-  <script src="eyeBase.js"></script>
-  <script src="materials.js"></script>
-  <script src="createHandwFaces.js"></script>
-  <script src="createStem.js"></script>
-  <script src="createEve.js"></script>
-
-  
-
-</head>
-<body>
-
-  <script id="prog">
-
-  var renderer = new THREE.WebGLRenderer();
-  //renderer.shadowMapEnabled = true;
-
-  var animationState; //global to keep track of changes in penguin's position
-
-  /* resetAnimationState
-  Function that returns the animationState to its starting values so that the
-  animation can be restarted.
-  */
-  function resetAnimationState() {
-    animationState = {
-      time: 0
-    }
-  }
-
-  resetAnimationState();
-
-
-
-  var scene = new THREE.Scene(); 
-  TW.mainInit(renderer,scene);
-
-  var state = TW.cameraSetup(renderer,scene, {minx:-10,maxx:10,miny:-30,maxy:20,minz:0,maxz:0}, 2, 600);
-  state.cameraObject.near= 0;
-  state.cameraObject.far = 500;
-
-  var groundTexture = new THREE.ImageUtils.loadTexture("ground.jpg", 
-    new THREE.UVMapping(),
-    function () {
-      console.log("ground.jpg is loaded.");
-      imageLoaded = true;
-      TW.render();
-    });
-
-
-  groundTexture.wrapS = groundTexture.wrapT =THREE.MirroredRepeatWrapping;
-
-  var groundMat = new THREE.MeshPhongMaterial(
-    { color: 0x898989,
-      specular:0xFFFFFF,
-      shininess: 0,
-      map: groundTexture,
-    });
-
-
-  var groundGeom = new THREE.PlaneGeometry(300,300);
-  updateQuadTextureParams(groundGeom, 0, 10, 0, 10)
-  var ground = new THREE.Mesh(groundGeom, groundMat);
-  ground.rotation.x = -Math.PI/2;
-  ground.position.set(0,-21.6,-70);
-  scene.add(ground);
-
-  var backgroundGeom = new THREE.CylinderGeometry(130,130,250,60,60,true);
-  backgroundMat = new THREE.MeshBasicMaterial({color: 0xc9b195, side: THREE.BackSide});
-  var background = new THREE.Mesh(backgroundGeom, backgroundMat);
-  background.position.set(0,50,-60);
-  scene.add(background);
-
-
-
   function createEyeFront(glassEye, glassCam) {
     var eyeFront = new THREE.Object3D();
     glassEye.scale.z = 0.7;
@@ -140,18 +45,7 @@ Final project
 
 }
 
-// var glassEyeL;
-// var glassEyeCamL; 
-// var glassEyeR;
-// var glassEyeCamR; 
 
-// var marbleSet1 = createMarble(0x524CFD, 0x444444, 5, 1.9);
-// glassEyeL = marbleSet1[0];
-// glassEyeCamL = marbleSet1[1];
-
-// var marbleSet2 = createMarble(0x524CFD, 0x444444, 5, 1.9);
-// glassEyeR = marbleSet2[0];
-// glassEyeCamR = marbleSet2[1];
 
 function createHead() {
   var head = new THREE.Object3D();
@@ -575,41 +469,151 @@ function createTexturedHand (handGeom) {
     return wholeHand;
   }
 
-//   var hand = createHand();
-//   var handLeft = hand.clone();
-//   handLeft.rotation.z = Math.PI;
-//   handLeft.rotation.y = Math.PI/10;
-//   handLeft.position.set(-6,-14,4);
 
-//   scene.add(handLeft);
+function createEyeBase(side) { // 1 is right side, -1 is left
 
-//   var handPivot = new THREE.Object3D();
-//   handPivot.position.set(7,-13,4);
-//   handPivot.add(hand);
-//   var stem = createStem();
-//   hand.add(stem);
-//   stem.position.set(-2,0,9);
-//   scene.add(handPivot);
+  var eyeBase = new THREE.Object3D();
 
-//   var headPivot = new THREE.Object3D();
-// //headPivot.add(new THREE.Mesh(new THREE.SphereGeometry(2), material));
-// headPivot.position.set(1,-8,0);
-// var neckNhead = new THREE.Object3D();
-// neckNhead.add(head);
-// neckNhead.add(wholeNeck);
+  var eye = new THREE.Shape();
+  eye.moveTo(-6, 6);
+  eye.bezierCurveTo(-6,3, -6,1,-2,0);
+  eye.bezierCurveTo(2,0, 2,1,1.5,4);
+  eye.bezierCurveTo(1,4.5,-0.4,5,-6,6);
 
-// headPivot.add(neckNhead);
-// neckNhead.position.set(-1,7.5,0);
-// scene.add(headPivot);
 
-var glassEyeL;
-var glassEyeCamL; 
-var glassEyeR;
-var glassEyeCamR;
-var neckNhead;
-var hand;
-var head;
-var stem;
+
+  var eyeGeom = new THREE.ExtrudeGeometry(eye, {amount: 5,
+    bevelEnabled: false,
+    curveSegments: 12});
+
+  var texturedEye = new THREE.SceneUtils.createMultiMaterialObject(eyeGeom, [eyeMaterial]);
+  if (side == -1) {
+    texturedEye.rotation.y = Math.PI;
+  }
+  eyeBase.add(texturedEye);
+
+// main eye added
+var backEye = new THREE.Shape();
+backEye.moveTo(5,5);
+backEye.lineTo(8,5);
+backEye.lineTo(8,4.8);
+backEye.bezierCurveTo(10, 4.5,10, 4.5, 8, 3.8);
+backEye.bezierCurveTo(8,1, 3,1.8,  5,1.8);
+backEye.bezierCurveTo(4,1, 3,4,  5,5);
+
+
+
+var backEyeGeom = new THREE.ExtrudeGeometry(backEye, {amount: 5,
+  bevelEnabled: false,
+  curveSegments: 12});  
+var backEye = new THREE.SceneUtils.createMultiMaterialObject(backEyeGeom, [eyeCoverMaterial]);
+if (side == -1) {
+  console.log("SIDE-1");
+  backEye.rotation.y= Math.PI;
+  backEye.position.set(10,2,-3);
+}
+
+if (side ==1) {
+  console.log("SIDE 1");
+  backEye.position.set(-9.7,2,-3);
+}
+backEye.scale.x = 1.3;
+backEye.rotation.z = Math.PI*2 - Math.PI/15;
+
+eyeBase.add(backEye);
+//backSide added
+
+
+var surfPoints1 = [ [ [-6.1,6.1,0],  [-6.1,3,0], [-5.9,0.8,0], [-2,-0.2,0] ],
+[ [-6.1,6.1,2], [-6.1,3,2],  [-5.9,0.8,2], [-2,-0.2,2] ],
+[ [-6.1,6.1,4], [-6.1,3,4],  [-5.9,0.8,4],  [-2,-0.2,4] ],
+[ [-6.1,6.1,6],  [-6.1,3,6],  [-5.9,0.8,6],  [-2,-0.2,6] ] ];
+
+
+var surfPoints2 = [ [ [-2,-0.2,0],  [0,-0.2,0], [2.7,0,0], [1.7,4,0] ],
+[ [-2,-0.2,2], [0,-0.2,2],  [2.7,0,2], [1.7,4,2] ],
+[ [-2,-0.2,4], [0,-0.2,4],  [2.7,0,4],  [1.7,4,4] ],
+[ [-2,-0.2,6],  [0,-0.2,6],  [2.7,0,6],  [1.7,4,6] ] ];
+
+var surfPoints3 = [ [ [1.7,4,0],  [0.5,5,0], [-3,5.4,0], [-6.1,6.1,0] ],
+[ [1.7,4,2], [0.5,5,2],  [-3,5.4,2], [-6.1,6.1,2] ],
+[ [1.7,4,4], [0.5,5,4],  [-3,5.4,4],  [-6.1,6.1,4] ],
+[ [1.7,4,6],  [0.5,5,6],  [-3,5.4,6],  [-6.1,6.1,6] ] ];
+
+
+  var surfGeom1 = new THREE.BezierSurfaceGeometry( surfPoints1.reverse(), 60, 60 );
+  var surfGeom2 = new THREE.BezierSurfaceGeometry(surfPoints2.reverse(), 60,60);
+  var surfGeom3 = new THREE.BezierSurfaceGeometry(surfPoints3.reverse(), 60,60);
+
+  var eyeCov1 = new THREE.SceneUtils.createMultiMaterialObject(surfGeom1, [eyeCoverMaterial]);
+
+  var eyeCov2 = new THREE.SceneUtils.createMultiMaterialObject(surfGeom2, [eyeCoverMaterial]);
+
+  var eyeCov3 = new THREE.SceneUtils.createMultiMaterialObject(surfGeom3, [eyeCoverMaterial]);
+
+if (side == -1) {
+  eyeCov1.rotation.y= Math.PI;
+  eyeCov2.rotation.y= Math.PI;
+  eyeCov3.rotation.y= Math.PI;
+   eyeCov1.position.z= 1;
+  eyeCov2.position.z= 1;
+  eyeCov3.position.z= 1;
+
+  console.log("SIDE -1");
+ }
+eyeBase.add(eyeCov1);
+eyeBase.add(eyeCov2);
+eyeBase.add(eyeCov3);
+
+
+return eyeBase;
+}
+
+createHandwFaces = function(width, height, depth) {
+    var w = width, h = height, len = depth;
+    var handGeom = new THREE.Geometry();
+    // add the front
+   handGeom.vertices.push(new THREE.Vector3(0, 0, 0)); // vertex 0
+   handGeom.vertices.push(new THREE.Vector3(w, 0, 0)); // vertex 1
+   handGeom.vertices.push(new THREE.Vector3(w, h, 0)); // vertex 2
+   handGeom.vertices.push(new THREE.Vector3(0, h, 0)); // vertex 3
+    
+    // just add the back also manually
+   handGeom.vertices.push(new THREE.Vector3(0, 0, -len)); // vertex 4
+   handGeom.vertices.push(new THREE.Vector3(w, 0, -len)); // vertex 5
+   handGeom.vertices.push(new THREE.Vector3(w, h, -len)); // vertex 6
+   handGeom.vertices.push(new THREE.Vector3(0, h, -len)); // vertex 7
+   
+    // now that we've got the vertices we need to define the faces.
+    // front faces
+    handGeom.faces.push(new THREE.Face3(0, 1, 2)); // 0
+    handGeom.faces.push(new THREE.Face3(0, 2, 3));//1
+    
+    // back faces
+    handGeom.faces.push(new THREE.Face3(4, 6, 5)); // 3
+    handGeom.faces.push(new THREE.Face3(4, 7, 6));//2
+  
+    // roof faces.
+    handGeom.faces.push(new THREE.Face3(3, 6, 7)); // 4
+    handGeom.faces.push(new THREE.Face3(3, 2, 6));//5
+  
+
+    // side faces
+    handGeom.faces.push(new THREE.Face3(0, 3, 4)); // 6
+    handGeom.faces.push(new THREE.Face3(3, 7, 4));//7
+    handGeom.faces.push(new THREE.Face3(1, 5, 2)); // 8
+    handGeom.faces.push(new THREE.Face3(2, 5, 6));//9
+
+    // floor faces
+    handGeom.faces.push(new THREE.Face3(0, 5, 1)); // 10
+    handGeom.faces.push(new THREE.Face3(0, 4, 5));//11
+
+    // calculate the normals for shading
+    handGeom.computeFaceNormals();
+    // barnGeometry.computeVertexNormals(true); only for "rounded" objects
+
+    return handGeom;
+};
 
 function createWallE() {
 var wallE = new THREE.Object3D();
@@ -675,194 +679,3 @@ return wallE;
 
 
 }
-
-
-var wallE = createWallE();
-wallE.position.set(-15,0,-10);
-wallE.rotation.y = Math.PI/8;
-scene.add(wallE);
-
-
-var eve = createEve();
-eve.position.set(14,-10,4);
-eve.rotation.y = Math.PI*2-Math.PI/5;
-scene.add(eve);
-
-scene.fog = new THREE.FogExp2( 0xc9b195, 0.007 );
-scene.fog.near = 30;
-
-
-ambLight= new THREE.AmbientLight( 0xA8A8A8, 0.01);
-
-
-sptLight = new THREE.SpotLight( 0x999999, 
-               0.7,               //params.spotLightIntensity,
-              300, //params.spotLightDistance,
-              2,//params.spotLightAngle,
-              20             //params.spotLightExp
-              ); 
-                   // positioning the bottom spotlight
-                   sptLight.position.set( 0,50,-10);
-                   
-
-                   dirLight = new THREE.DirectionalLight(0xC2C2C2, 0.4);
-          //setting up the light at a direction which will fall on the back, left walls and the floor
-          dirLight.position.set(0.5, 1, 1);
-
-
-
-  //wholeHand.position()
-  scene.add(ambLight);
-  scene.add(sptLight);
-  scene.add(dirLight);
-
- 
-  params = {
-    maxHandRotation: Math.PI/3,
-    headMaxRotation: Math.PI/3,
-    headTiltMax: Math.PI/10,
-    headMotion_begin: 1,
-    headMotion_end: 30,
-    handMotion1_begin: 20,
-    handMotion1_end: 50,
-    headTilt_begin:40,
-    headTilt_end:60,
-    eveUp_begin: 55,
-    eveUp_end: 65,
-    eveDown_begin: 66,
-    eveDown_end: 77,
-    eveRotation: Math.PI*2,
-    eveRotationInit: Math.PI*2-Math.PI/5,
-    eveJumpHeight: 2,
-    eveBack_begin:76,
-    eveBack_end: 86,
-    maxTS: 10
-  }
-
-  function resetState() {
-    animationState = {
-        rotation: 0, // fall from highest height
-        eveRotationInit: Math.PI*2-Math.PI/5,
-        time: 0
-      };
-    }
-
-
-    function firstState() {
-      resetState();
-      hand.rotation.y=animationState.rotation;
-      neckNhead.rotation.y= animationState.rotation;
-      head.rotation.z=animationState.rotation;
-      eve.rotation.y = animationState.eveRotationInit;
-
-      TW.render();
-    }
-
-    function updateHead(ts){
-
-     if (ts>params.headMotion_begin && ts < params.headMotion_end){
-      neckNhead.rotation.y += params.headMaxRotation/ (params.headMotion_end-params.headMotion_begin);
-    }
-  }
-  function updateHand(ts){
-
-    if (ts>params.handMotion1_begin && ts < params.handMotion1_end){
-      hand.rotation.y += params.maxHandRotation/ (params.handMotion1_end-params.handMotion1_begin);
-      stem.rotation.y+= params.maxHandRotation/ (params.handMotion1_end-params.handMotion1_begin);
-    }
-  }
-
-  function updateTilt(ts) {
-    if (ts>params.headTilt_begin && ts < params.headTilt_end){
-      head.rotation.z += params.headTiltMax/ (params.headTilt_end-params.headTilt_begin);
-    }
-
-  }
-
-  function updateEve(ts) {
-      if (ts>params.eveUp_begin && ts < params.eveUp_end){
-       for (i = 0; i < 4; i++) { 
-    eve.rotation.y += params.eveRotation/ (params.eveUp_end-params.eveUp_begin);
-    eve.position.y +=params.eveJumpHeight/ (params.eveUp_end-params.eveUp_begin);
-}
-
-}
-          if (ts>params.eveDown_begin && ts < params.eveDown_end){
-       for (i = 0; i < 4; i++) { 
-    eve.rotation.y += params.eveRotation/ (params.eveDown_end-params.eveDown_begin);
-
-    eve.position.y -=params.eveJumpHeight/ (params.eveDown_end-params.eveDown_begin);
-}
-    }
-
-    if (ts>params.eveBack_begin && ts < params.eveBack_end) {
-      eve.rotation.y += params.eveRotationInit/ (params.eveBack_end-params.eveBack_begin);
-    } 
-  
-}
-
-  function updateWalle(ts){
-    //console.log("time is " + ts);
-    updateHead(ts);
-    updateHand(ts);
-    updateTilt(ts);
-    updateEve(ts);
-
-    // if (ts> params.maxTS){
-    //   stopAnimation();
-    // }
-  }
-
-  function updateState(){
-    animationState.time +=1;
-    updateWalle(animationState.time);
-  }
-
-
-//value to stop the animation
-var animationId = null;
-
-
-function animateScene() {
-  updateState();
-  animationId = requestAnimationFrame( animateScene );
-  renderer.render(scene, state.cameraObject);
-
-}
-
-function animate() {
-  animationId = requestAnimationFrame( animate );
-  render();
-}
-/*stopAnimation
-Stops the animation if it's started.
-*/
-function stopAnimation() {
-
-  if (animationId != null) {
-    cancelAnimationFrame(animationId);
-  }
-}
-
-function render() {
- glassEyeL.visible = false;
- glassEyeR.visible = false;
-
- glassEyeCamL.updateCubeMap(renderer, scene);
- glassEyeCamR.updateCubeMap(renderer, scene);
- glassEyeL.visible = true;
- glassEyeR.visible = true;
-   renderer.render(scene, state.cameraObject); //re-render the scene using the TW camera
-   
-
- }
-
- animate();
-
- TW.setKeyboardCallback("g",animateScene,"go:  start animation");
- TW.setKeyboardCallback("0",firstState,"reset animation");
-
- TW.viewFromFront();        
- </script>
-</body>
-</html>
