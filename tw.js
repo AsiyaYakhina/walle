@@ -1862,7 +1862,7 @@ THREE.BezierSurfaceGeometry.prototype.computeBezierSurfacePoints =
                 vert.z += cp[2] * bernNIS * bernMJT;
             }
         }
-        console.log("s: "+s+" t: "+t+" x: "+vert.x);
+        //console.log("s: "+s+" t: "+t+" x: "+vert.x);
         return vert;
     }
 
@@ -1912,7 +1912,7 @@ THREE.BezierSurfaceGeometry.prototype.computeBezierSurfaceFaces =
             var c = ( ix + 1 ) + gridX1 * ( iz + 1 );
             var d = ( ix + 1 ) + gridX1 * iz;
 
-            console.log("a: "+a+" b: "+b+" c: "+c+" d: "+d);
+            //console.log("a: "+a+" b: "+b+" c: "+c+" d: "+d);
 
             var uva = new THREE.Vector2( ix / gridX, 1 - iz / gridZ );
             var uvb = new THREE.Vector2( ix / gridX, 1 - ( iz + 1 ) / gridZ );

@@ -17,10 +17,11 @@ Final project
   </style>
   <script src="http://cs.wellesley.edu/~cs307/threejs/libs/three.min.js"></script>
   <script src="http://cs.wellesley.edu/~cs307/threejs/libs/OrbitControls.js"></script>
-  <script src="tw.js"></script>
+  
   <script src="http://cs.wellesley.edu/~cs307/threejs/libs/dat.gui.min.js"></script>
   <script src="http://cs.wellesley.edu/~cs307/threejs/dirksen/libs/spin.js"></script>
   <script src="http://cs.wellesley.edu/~cs307/threejs/dirksen/libs/ThreeBSP.js"></script>
+  <script src="tw.js"></script>
   <script src="marble.js"></script>
   <script src="eyeBase.js"></script>
   <script src="materials.js"></script>
@@ -30,7 +31,6 @@ Final project
   <script src="createWallE.js"></script>
 
   
-
 </head>
 <body>
 
@@ -107,10 +107,10 @@ Final project
 
 
   sptLight = new THREE.SpotLight( 0x999999, 
-               0.7,               //params.spotLightIntensity,
-              300, //params.spotLightDistance,
-              2,//params.spotLightAngle,
-              20             //params.spotLightExp
+               0.7, //params.spotLightIntensity,
+              300,  //params.spotLightDistance,
+              2,   //params.spotLightAngle,
+              20   //params.spotLightExp
               ); 
                    // positioning the bottom spotlight
                    sptLight.position.set( 0,50,-10);
