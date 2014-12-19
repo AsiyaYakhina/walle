@@ -1,6 +1,81 @@
 
 
-  function createEyeFront(glassEye, glassCam) {
+//This file includes helper functions that help create Wall-E, as well as the
+// actual function that creates Wall-E holding a grass stem. 
+//
+// NOTE: For Wall-E to render properly, you would also need to import materials.js 
+// which you can find in the same directory as this file. For the grass stem to show
+// up you will also need to import createStem.js
+//
+// Wall-E dimensions:  20 wide
+
+
+function createWallE() {
+var wallE = new THREE.Object3D();
+
+
+var marbleSet1 = createMarble(0x524CFD, 0x444444, 5, 1.9);
+glassEyeL = marbleSet1[0];
+glassEyeCamL = marbleSet1[1];
+
+var marbleSet2 = createMarble(0x524CFD, 0x444444, 5, 1.9);
+glassEyeR = marbleSet2[0];
+glassEyeCamR = marbleSet2[1];
+
+
+
+ var bodyBoxGeom = new THREE.BoxGeometry(12,10,12);
+ addTextureCoords(bodyBoxGeom, 5, 5);
+ var bodyBox = new THREE.Mesh(bodyBoxGeom, yellowMaterial);
+ bodyBox.position.set(1,-14,0);
+
+head = createHead(glassEyeL, glassEyeCamL, glassEyeR, glassEyeCamR);
+head.position.y = -1;
+
+wholeNeck = createNeck();
+wholeNeck.position.set(0,0.7,-1);
+
+var wheelL = createWheel();
+wheelL.position.set(-7,-22,0)
+wheelR = createWheel();
+wheelR.position.set(9,-22,0)
+wallE.add(wheelL); // add to wallE
+wallE.add(wheelR);
+
+  hand = createHand();
+  var handLeft = hand.clone();
+  handLeft.rotation.z = Math.PI;
+  handLeft.rotation.y = Math.PI/10;
+  handLeft.position.set(-6,-14,4);
+
+  wallE.add(handLeft);
+
+  var handPivot = new THREE.Object3D();
+  handPivot.position.set(7,-13,4);
+  handPivot.add(hand);
+  stem = createStem();
+  hand.add(stem);
+  stem.position.set(-2,0,9);
+  wallE.add(handPivot);
+
+  var headPivot = new THREE.Object3D();
+//headPivot.add(new THREE.Mesh(new THREE.SphereGeometry(2), material));
+headPivot.position.set(1,-8,0);
+neckNhead = new THREE.Object3D();
+neckNhead.add(head);
+neckNhead.add(wholeNeck);
+
+headPivot.add(neckNhead);
+neckNhead.position.set(-1,7.5,0);
+wallE.add(headPivot);
+wallE.add(bodyBox);
+
+return wallE;
+
+}
+
+
+ function createEyeFront(glassEye, glassCam) {
     var eyeFront = new THREE.Object3D();
     glassEye.scale.z = 0.7;
 
@@ -46,8 +121,7 @@
 }
 
 
-
-function createHead() {
+function createHead(glassEyeL, glassEyeCamL, glassEyeR, glassEyeCamR) {
   var head = new THREE.Object3D();
 
   headGeom = new THREE.BoxGeometry(4,2.5,3);
@@ -77,6 +151,8 @@ function createHead() {
 }
 
 
+
+ 
 function createNeck() {
 
   var wholeNeck = new THREE.Object3D();  
@@ -137,28 +213,23 @@ function createNeck() {
 
 
 
-  var textureYellowDetail = new THREE.ImageUtils.loadTexture("yellowDetail.jpg", 
-    new THREE.UVMapping(),
-    function () {
-      console.log("yellowDetail is loaded.");
-      imageLoaded = true;
-      TW.render();
-    });
+  // var textureYellowDetail = new THREE.ImageUtils.loadTexture("yellowDetail.jpg", 
+  //   new THREE.UVMapping(),
+  //   function () {
+  //     console.log("yellowDetail is loaded.");
+  //     imageLoaded = true;
+  //     TW.render();
+  //   });
 
+  // textureYellowDetail.wrapS = textureYellowDetail.wrapT = THREE.MirroredRepeatWrapping;
 
-
-  textureYellowDetail.wrapS = textureYellowDetail.wrapT = THREE.MirroredRepeatWrapping;
-  // textureYellowDetail.repeat.set( 1 / 10, 1 / 10 );
-  // textureYellowDetail.offset.set( 0.8, 0.9 );
-
-
-  var yellowDetailMat = new THREE.MeshPhongMaterial(
-    { color: 0x898989,
-      specular:0xFFFFFF,
-      shininess: 0,
-      map: textureYellowDetail,
-      castShadow: true
-    });
+  // var yellowDetailMat = new THREE.MeshPhongMaterial(
+  //   { color: 0x898989,
+  //     specular:0xFFFFFF,
+  //     shininess: 0,
+  //     map: textureYellowDetail,
+  //     castShadow: true
+  //   });
 
 
 
@@ -177,34 +248,6 @@ function createNeck() {
 
   return wholeNeck;
 }
-
-// wholeNeck = createNeck();
-// wholeNeck.position.set(0,0.7,-1);
-//scene.add(wholeNeck);
-
-var textureWheel = new THREE.ImageUtils.loadTexture("wheel.jpg", 
-  new THREE.UVMapping(),
-  function () {
-    console.log("eyeTexture is loaded.");
-    imageLoaded = true;
-    TW.render();
-  });
-
-
-
-textureWheel.wrapS = textureWheel.wrapT = THREE.MirroredRepeatWrapping;
-textureWheel.repeat.set( 3, 1);
-  // textureWheel.offset.set( 0.8, 0.9 );
-
-
-  var wheelMaterial = new THREE.MeshPhongMaterial(
-    { color: 0x898989,
-      specular:0xFFFFFF,
-      shininess: 0,
-      map: textureWheel,
-      side: THREE.DoubleSide,
-      castShadow: true
-    });
 
 
   function createWheel () {
@@ -240,54 +283,6 @@ textureWheel.repeat.set( 3, 1);
     return wheel;
   }
 
-// var wheelL = createWheel();
-// wheelL.position.set(-7,-22,0)
-// wheelR = createWheel();
-// wheelR.position.set(9,-22,0)
-// scene.add(wheelL);
-// scene.add(wheelR);
-
-
-function addTextureCoords(boxGeom, maxT, maxS) {
-
-  var UVs = [];
-  function faceCoords(as,at, bs,bt, cs,ct) {
-    UVs.push( [ new THREE.Vector2(as,at),
-      new THREE.Vector2(bs,bt),
-      new THREE.Vector2(cs,ct)] );
-  }
-      // front
-      faceCoords(0,0, maxS,0, maxS,maxT);
-      faceCoords(0,0, maxS,maxT, 0,maxT);
-      
-      faceCoords(maxS,0, 0,maxT, 0,0);
-      faceCoords(maxS,0, maxS,maxT, 0,maxT);
-         // sides
-         faceCoords(maxS,0, 0,maxT, 0,0);
-         faceCoords(maxS,maxT, 0,maxT, maxS,0);
-         faceCoords(maxS,0, maxS,maxT, 0,0);
-         faceCoords(maxS,maxT, 0,maxT, 0,0);
-      // floor
-      faceCoords(0,0, maxS,0, 0,maxT);
-      faceCoords(maxS,0, maxS,maxT, 0,maxT);
-      // Finally, attach this to the geometry
-      boxGeom.faceVertexUvs = [ UVs ];
-
-    }
-
-    function updateQuadTextureParams(quad, sMin, sMax, tMin, tMax) {
-    var elt = quad.faceVertexUvs[0]; // dunno why they have this 1-elt array
-    var face0 = elt[0];
-    face0[0] = new THREE.Vector2(sMin,tMax);
-    face0[1] = new THREE.Vector2(sMin,tMin);
-    face0[2] = new THREE.Vector2(sMax,tMax);
-    var face1 = elt[1];
-    face1[0] = new THREE.Vector2(sMin,tMin);
-    face1[1] = new THREE.Vector2(sMax,tMin);
-    face1[2] = new THREE.Vector2(sMax,tMax);
-   // printTextureParams(quad);
-   quad.uvsNeedUpdate = true;
- }
 
 
  var arm = new THREE.Shape();
@@ -313,45 +308,7 @@ function addTextureCoords(boxGeom, maxT, maxS) {
  neckPoints2.push(new THREE.Vector3(0, -2,0));
 
 
- var options = {
-  amount: 5,
-  bevelThickness: 0,
-  bevelSize: 0,
-  bevelSegments: 3,
-  bevelEnabled: false,
-  curveSegments: 12,
-  steps: 1
-};
-
-var options2 = {
-  amount: 2,
-  bevelThickness: 0,
-  bevelSize: 0,
-  bevelSegments: 3,
-  bevelEnabled: false,
-  curveSegments: 12,
-  steps: 1
-};
-var options3 = {
-  amount: 14,
-  bevelThickness: 0,
-  bevelSize: 0,
-  bevelSegments: 0,
-  bevelEnabled: false,
-  curveSegments: 0,
-  steps: 1
-};
-
-var options4 = {
-  amount: 1.4,
-  bevelThickness: 0,
-  bevelSize: 0,
-  bevelSegments: 0,
-  bevelEnabled: false,
-  curveSegments: 0,
-  steps: 1
-};
-
+ 
 
 var mats = new THREE.MeshFaceMaterial(
 
@@ -414,8 +371,8 @@ function createTexturedHand (handGeom) {
 
     addTextureCoords(headGeom, 1, 1);
 
-    var sholderGeom = new THREE.CylinderGeometry(0.7,0.7,2,5,32);
-    var sholder = new THREE.Mesh(sholderGeom, handMetalMat);
+    var shoulderGeom = new THREE.CylinderGeometry(0.7,0.7,2,5,32);
+    var shoulder = new THREE.Mesh(shoulderGeom, handMetalMat);
 
     var armStartGeom = new THREE.CylinderGeometry(0.8,0.8,2,32);
     var armStart = new THREE.Mesh(armStartGeom, handMetalMat);
@@ -423,11 +380,17 @@ function createTexturedHand (handGeom) {
     var wristGeom = new THREE.CylinderGeometry(0.4,0.4,2,32);
     var wrist = new THREE.Mesh(wristGeom, yellowMaterial);
 
-    var armGeom = new THREE.ExtrudeGeometry(arm,options4)
+    var armGeom = new THREE.ExtrudeGeometry(arm,{amount: 1.4,
+  bevelThickness: 0,
+  bevelSize: 0,
+  bevelSegments: 0,
+  bevelEnabled: false,
+  curveSegments: 0,
+  steps: 1})
     var armFirst = new THREE.Mesh(armGeom, handMetalMat);
     var armSecond = armFirst.clone();
     
-    sholder.position.set(0,-0.4,0.6);
+    shoulder.position.set(0,-0.4,0.6);
 
     wrist.position.set(0,0.4,9.5);
     wrist.rotation.x= Math.PI/2;
@@ -461,7 +424,7 @@ function createTexturedHand (handGeom) {
 
     wholeHand.add(hand);
 
-    wholeHand.add(sholder);
+    wholeHand.add(shoulder);
 
     wholeHand.add(handArm);
     wholeHand.rotation.x= Math.PI*2 - Math.PI/6;
@@ -615,67 +578,45 @@ createHandwFaces = function(width, height, depth) {
     return handGeom;
 };
 
-function createWallE() {
-var wallE = new THREE.Object3D();
 
 
-var marbleSet1 = createMarble(0x524CFD, 0x444444, 5, 1.9);
-glassEyeL = marbleSet1[0];
-glassEyeCamL = marbleSet1[1];
+function addTextureCoords(boxGeom, maxT, maxS) {
 
-var marbleSet2 = createMarble(0x524CFD, 0x444444, 5, 1.9);
-glassEyeR = marbleSet2[0];
-glassEyeCamR = marbleSet2[1];
+  var UVs = [];
+  function faceCoords(as,at, bs,bt, cs,ct) {
+    UVs.push( [ new THREE.Vector2(as,at),
+      new THREE.Vector2(bs,bt),
+      new THREE.Vector2(cs,ct)] );
+  }
+      // front
+      faceCoords(0,0, maxS,0, maxS,maxT);
+      faceCoords(0,0, maxS,maxT, 0,maxT);
+      
+      faceCoords(maxS,0, 0,maxT, 0,0);
+      faceCoords(maxS,0, maxS,maxT, 0,maxT);
+         // sides
+         faceCoords(maxS,0, 0,maxT, 0,0);
+         faceCoords(maxS,maxT, 0,maxT, maxS,0);
+         faceCoords(maxS,0, maxS,maxT, 0,0);
+         faceCoords(maxS,maxT, 0,maxT, 0,0);
+      // floor
+      faceCoords(0,0, maxS,0, 0,maxT);
+      faceCoords(maxS,0, maxS,maxT, 0,maxT);
+      // Finally, attach this to the geometry
+      boxGeom.faceVertexUvs = [ UVs ];
 
+    }
 
-
- var bodyBoxGeom = new THREE.BoxGeometry(12,10,12);
- addTextureCoords(bodyBoxGeom, 5, 5);
- var bodyBox = new THREE.Mesh(bodyBoxGeom, yellowMaterial);
- bodyBox.position.set(1,-14,0);
-
-head = createHead();
-head.position.y = -1;
-
-wholeNeck = createNeck();
-wholeNeck.position.set(0,0.7,-1);
-
-var wheelL = createWheel();
-wheelL.position.set(-7,-22,0)
-wheelR = createWheel();
-wheelR.position.set(9,-22,0)
-wallE.add(wheelL); // add to wallE
-wallE.add(wheelR);
-
-  hand = createHand();
-  var handLeft = hand.clone();
-  handLeft.rotation.z = Math.PI;
-  handLeft.rotation.y = Math.PI/10;
-  handLeft.position.set(-6,-14,4);
-
-  wallE.add(handLeft);
-
-  var handPivot = new THREE.Object3D();
-  handPivot.position.set(7,-13,4);
-  handPivot.add(hand);
-  stem = createStem();
-  hand.add(stem);
-  stem.position.set(-2,0,9);
-  wallE.add(handPivot);
-
-  var headPivot = new THREE.Object3D();
-//headPivot.add(new THREE.Mesh(new THREE.SphereGeometry(2), material));
-headPivot.position.set(1,-8,0);
-neckNhead = new THREE.Object3D();
-neckNhead.add(head);
-neckNhead.add(wholeNeck);
-
-headPivot.add(neckNhead);
-neckNhead.position.set(-1,7.5,0);
-wallE.add(headPivot);
-wallE.add(bodyBox);
-
-return wallE;
-
-
-}
+    function updateQuadTextureParams(quad, sMin, sMax, tMin, tMax) {
+    var elt = quad.faceVertexUvs[0]; // dunno why they have this 1-elt array
+    var face0 = elt[0];
+    face0[0] = new THREE.Vector2(sMin,tMax);
+    face0[1] = new THREE.Vector2(sMin,tMin);
+    face0[2] = new THREE.Vector2(sMax,tMax);
+    var face1 = elt[1];
+    face1[0] = new THREE.Vector2(sMin,tMin);
+    face1[1] = new THREE.Vector2(sMax,tMin);
+    face1[2] = new THREE.Vector2(sMax,tMax);
+   // printTextureParams(quad);
+   quad.uvsNeedUpdate = true;
+ }
