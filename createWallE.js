@@ -371,35 +371,25 @@ function createWheel () {
 }
 
 
+//Helper function that creates a textured box for Wall-E's hand
 
-var arm = new THREE.Shape();
-arm.moveTo(1.4,-0.31);
-arm.lineTo(3,-2);
-arm.lineTo(3, -4);
-arm.lineTo(2.5, -4);
-arm.lineTo(2.5,-2);
-arm.lineTo(1,-1.9);
-
-
-
+function createTexturedHand (handGeom) {
+// material array to map on the hand
 var mats = new THREE.MeshFaceMaterial(
 
   [ yellowMaterial,
   handMaterial]);
-
-function createTexturedHand (handGeom) {
     //setting material indexes for the faces
-
-    //putting the brick texture on the front and the back of the barn
+    // to be able to selectively map textures
+//mapping the yellow metal texture on the following faces
     for (i = 0; i<6; i++) {
       handGeom.faces[i].materialIndex = 0;
     }
-
-
-     // putting the brick texture on the side wall faces and floor face
+    // mapping the stripy texture on one of the sides of the box
      for (i = 6; i<8; i++) {
       handGeom.faces[i].materialIndex = 1;
     }
+    //mapping the yellow metal texture on the following faces
     for (i = 8; i<11; i++) {
       handGeom.faces[i].materialIndex = 0;
     }
@@ -411,45 +401,32 @@ function createTexturedHand (handGeom) {
     return hand;
   }
 
-  var textureHandMet = new THREE.ImageUtils.loadTexture("handMetal.jpg", 
-    new THREE.UVMapping(),
-    function () {
-      console.log("hadTextureMet is loaded.");
-      imageLoaded = true;
-      TW.render();
-    });
-
-
-
-  textureHandMet.wrapS = textureHandMet.wrapT =THREE.MirroredRepeatWrapping;
-  textureHandMet.repeat.set( 1/2, 1/3);
-  // textureWheel.offset.set( 0.8, 0.9 );
-
-  var handMetalMat = new THREE.MeshPhongMaterial(
-    { color: 0x898989,
-      specular:0xFFFFFF,
-      shininess: 0,
-      map: textureHandMet,
-      side: THREE.DoubleSide,
-      castShadow: true
-    });
-
-
-
-  function createHand() { // 1 for right hand, -1 for left hand
+ // Helper function that creates the whole hand
+  function createHand() { 
 
     var wholeHand = new THREE.Object3D();
     var handArm = new THREE.Object3D();
 
+    // creating the shoulder of the arm
     var shoulderGeom = new THREE.CylinderGeometry(0.7,0.7,2,5,32);
     var shoulder = new THREE.Mesh(shoulderGeom, handMetalMat);
-
+    // creating the link between the hand box and the wrist of the hand
     var armStartGeom = new THREE.CylinderGeometry(0.8,0.8,2,32);
     var armStart = new THREE.Mesh(armStartGeom, handMetalMat);
-
+    // creating the wrist of the hand
     var wristGeom = new THREE.CylinderGeometry(0.4,0.4,2,32);
     var wrist = new THREE.Mesh(wristGeom, yellowMaterial);
 
+// arm shape to be extruded for Wall-E's fingers
+var arm = new THREE.Shape();
+arm.moveTo(1.4,-0.31);
+arm.lineTo(3,-2);
+arm.lineTo(3, -4);
+arm.lineTo(2.5, -4);
+arm.lineTo(2.5,-2);
+arm.lineTo(1,-1.9);
+
+// extruding the shape
     var armGeom = new THREE.ExtrudeGeometry(arm,{amount: 1.4,
       bevelThickness: 0,
       bevelSize: 0,
@@ -457,18 +434,18 @@ function createTexturedHand (handGeom) {
       bevelEnabled: false,
       curveSegments: 0,
       steps: 1})
+    // making two fingers
     var armFirst = new THREE.Mesh(armGeom, handMetalMat);
     var armSecond = armFirst.clone();
-    
-    shoulder.position.set(0,-0.4,0.6);
 
+    //positioning and rotating the hand details accordinly 
+    shoulder.position.set(0,-0.4,0.6);
     wrist.position.set(0,0.4,9.5);
     wrist.rotation.x= Math.PI/2;
 
     var armEnd = new THREE.Object3D();
     armFirst.rotation.y = Math.PI*2-Math.PI/2;
     armFirst.position.set(0,0,0);
-
     armSecond.rotation.y = Math.PI*2-Math.PI/2; 
     armSecond.position.set(1.6,0,0)
     armEnd.add(armFirst);
@@ -476,26 +453,22 @@ function createTexturedHand (handGeom) {
     armEnd.position.set(0,1,9.7);
     armStart.position.set(0,0,10.8);
     armStart.rotation.z = Math.PI/2;
-
     handArm.add(wrist);
     handArm.add(armEnd); 
     handArm.add(armStart);
     handArm.position.set(0,0,-2.5);
     handArm.rotation.z =Math.PI*2- Math.PI/2;
 
-
+//creatin the box part of the hand
     var handFaces = createHandwFaces(1.4,2,6);
     var hand = createTexturedHand(handFaces);
 
     hand.rotation.y = Math.PI;
     hand.position.set(1,-1.2,1);
 
-
-
+//nesting all the hadn details in the parent wholeHand object
     wholeHand.add(hand);
-
     wholeHand.add(shoulder);
-
     wholeHand.add(handArm);
     wholeHand.rotation.x= Math.PI*2 - Math.PI/6;
 
@@ -503,7 +476,8 @@ function createTexturedHand (handGeom) {
   }
 
 
-
+//This helper function creates habd faces to allow selective texture
+//mapping for the hand object
   createHandwFaces = function(width, height, depth) {
     var w = width, h = height, len = depth;
     var handGeom = new THREE.Geometry();
@@ -513,7 +487,7 @@ function createTexturedHand (handGeom) {
    handGeom.vertices.push(new THREE.Vector3(w, h, 0)); // vertex 2
    handGeom.vertices.push(new THREE.Vector3(0, h, 0)); // vertex 3
 
-    // just add the back also manually
+    // the back
    handGeom.vertices.push(new THREE.Vector3(0, 0, -len)); // vertex 4
    handGeom.vertices.push(new THREE.Vector3(w, 0, -len)); // vertex 5
    handGeom.vertices.push(new THREE.Vector3(w, h, -len)); // vertex 6
@@ -528,10 +502,9 @@ function createTexturedHand (handGeom) {
     handGeom.faces.push(new THREE.Face3(4, 6, 5)); // 3
     handGeom.faces.push(new THREE.Face3(4, 7, 6));//2
 
-    // roof faces.
+    // top faces.
     handGeom.faces.push(new THREE.Face3(3, 6, 7)); // 4
     handGeom.faces.push(new THREE.Face3(3, 2, 6));//5
-
 
     // side faces
     handGeom.faces.push(new THREE.Face3(0, 3, 4)); // 6
@@ -545,13 +518,10 @@ function createTexturedHand (handGeom) {
 
     // calculate the normals for shading
     handGeom.computeFaceNormals();
-    // barnGeometry.computeVertexNormals(true); only for "rounded" objects
-
     return handGeom;
   };
 
-
-
+// functions that help cuztomized texture mapping
   function addTextureCoords(boxGeom, maxT, maxS) {
 
     var UVs = [];

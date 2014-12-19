@@ -270,24 +270,4 @@ textureWheel.repeat.set( 3, 1);
 
 
 
- // var yellowRustTexture = new THREE.ImageUtils.loadTexture("rustyYello.jpg", 
-  //     new THREE.UVMapping(),
-  //     function () {
-  //       console.log("yellowRustTexture is loaded.");
-  //       imageLoaded = true;
-  //       TW.render();
-  //     });
 
-  //   yellowRustTexture.wrapS = yellowTexture.wrapT = THREE.MirroredRepeatWrapping;
-  //   //yellowRustTexture.repeat.set( 1 / 100, 1 / 100 );
-  //   yellowRustTexture.offset.set( 0.8, 0.9 );
-
-
-
-  //   var yellowRustMaterial = new THREE.MeshPhongMaterial(
-  //     { color: 0x898989,
-  //       specular:0xFFFFFF,
-  //       shininess: 0,
-  //       map: yellowRustTexture,
-  //       receiveShadow: true
-  //     });
