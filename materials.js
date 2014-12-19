@@ -263,26 +263,3 @@ textureWheel.repeat.set( 3, 1);
       map: textureYellowDetail,
     });
 
-
-
-
-  var backgroundText = new THREE.ImageUtils.loadTexture("citiscape.jpg", 
-    new THREE.UVMapping(),
-    function () {
-      console.log("citiscape is loaded.");
-      imageLoaded = true;
-      TW.render();
-    });
-
- // textureYellowDetail.wrapS = textureYellowDetail.wrapT = THREE.MirroredRepeatWrapping;
-
-  var backgroundMat = new THREE.MeshPhongMaterial(
-    { color: 0x898989,
-      specular:0xFFFFFF,
-      shininess: 0,
-      map: backgroundText,
-    });
-
-
-
-

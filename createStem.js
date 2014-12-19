@@ -24,10 +24,10 @@ leaf2.position.set(0,6.5,0);
 
 //points that will be used to create a tube geometry for the stem
 var stemPoints = [];
-  points.push(new THREE.Vector3(0,0,0));
-  points.push(new THREE.Vector3(1,3,0));
-  points.push(new THREE.Vector3(-1,5,0));
-  points.push(new THREE.Vector3(0.5,7,0));
+  stemPoints.push(new THREE.Vector3(0,0,0));
+  stemPoints.push(new THREE.Vector3(1,3,0));
+  stemPoints.push(new THREE.Vector3(-1,5,0));
+  stemPoints.push(new THREE.Vector3(0.5,7,0));
 
 //creating tube geometry
 var stemGeom =  new THREE.TubeGeometry(new THREE.SplineCurve3(stemPoints), 64, 0.1, 10, false);

@@ -39,12 +39,9 @@ This is a Wall-E scene where Wall-E is animated to gift a stem to Eve and she sw
     </div>
 
   <script id="prog">
-
   var renderer = new THREE.WebGLRenderer();
-  //renderer.shadowMapEnabled = true;
 
   var animationState; //global to keep track of changes in in the state of the scene
-
   /* resetAnimationState
   Function that returns the animationState to its starting values so that the
   animation can be restarted.
@@ -54,15 +51,10 @@ This is a Wall-E scene where Wall-E is animated to gift a stem to Eve and she sw
       time: 0
     }
   }
-
   resetAnimationState();
-
-
   var scene = new THREE.Scene(); 
   TW.mainInit(renderer,scene);
-
   var state = TW.cameraSetup(renderer,scene, {minx:-10,maxx:10,miny:-30,maxy:20,minz:0,maxz:0}, 2, 600);
-
 //creating the ground for the scene and mapping stone texture on it
   var groundGeom = new THREE.PlaneGeometry(300,300);
   updateQuadTextureParams(groundGeom, 0, 10, 0, 10)
@@ -71,27 +63,9 @@ This is a Wall-E scene where Wall-E is animated to gift a stem to Eve and she sw
   ground.position.set(0,-21.6,-70);
   scene.add(ground);
 
- var backgroundText = new THREE.ImageUtils.loadTexture("citiscape.jpg", 
-    new THREE.UVMapping(),
-    function () {
-      console.log("citiscape is loaded.");
-      imageLoaded = true;
-      TW.render();
-    });
-
- // textureYellowDetail.wrapS = textureYellowDetail.wrapT = THREE.MirroredRepeatWrapping;
-
-  var backgroundMat = new THREE.MeshPhongMaterial(
-    { color: 0x898989,
-      specular:0xFFFFFF,
-      shininess: 0,
-      map: backgroundText,
-    });
-
-
   //creating a sphere to create a sky background for the scene
-  var backgroundGeom = new THREE.SphereGeometry(200,30,30);
-  //backgroundMat = new THREE.MeshBasicMaterial({color: 0xc9b195, side: THREE.BackSide});
+  var backgroundGeom = new THREE.SphereGeometry(300,100,100);
+  backgroundMat = new THREE.MeshBasicMaterial({color: 0xc9b195, side: THREE.BackSide});
   var background = new THREE.Mesh(backgroundGeom, backgroundMat);
   background.position.set(0,50,-60);
   scene.add(background);
@@ -105,7 +79,6 @@ This is a Wall-E scene where Wall-E is animated to gift a stem to Eve and she sw
   var hand;
   var head;
   var stem;
-
 //creating Wall-E
   var wallE = createWallE(); 
 //moving it to the left to make space for Eve
@@ -113,7 +86,6 @@ This is a Wall-E scene where Wall-E is animated to gift a stem to Eve and she sw
   //rotating Wall-E a little bit so that he's facing Eve
   wallE.rotation.y = Math.PI/8;
   scene.add(wallE);
-
 //creating Eve
   var eve = createEve();
   // moving it to the right to make space for Wall-E
@@ -121,11 +93,9 @@ This is a Wall-E scene where Wall-E is animated to gift a stem to Eve and she sw
   //rotating it towards Wall-E
   eve.rotation.y = Math.PI*2-Math.PI/5;
   scene.add(eve);
-
 //adding some fog to the scene to blur the edge between the ground and the sky
   scene.fog = new THREE.FogExp2( 0xc9b195, 0.007 );
   scene.fog.near = 30;
-
 //adding lights to the scene
   ambLight= new THREE.AmbientLight( 0xA8A8A8, 0.01);
   sptLight = new THREE.SpotLight( 0x999999, 
@@ -139,12 +109,9 @@ This is a Wall-E scene where Wall-E is animated to gift a stem to Eve and she sw
                    
                    dirLight = new THREE.DirectionalLight(0xC2C2C2, 0.4);
              dirLight.position.set(0.5, 1, 1);
-
-
   scene.add(ambLight);
   scene.add(sptLight);
   scene.add(dirLight);
-
   //parameters that will be used in animating the scene
   animationParams = {
     maxHandRotation: Math.PI/3,
@@ -167,7 +134,6 @@ This is a Wall-E scene where Wall-E is animated to gift a stem to Eve and she sw
     eveBack_end: 86,
     maxTS: 10
   }
-
   function resetState() {
     animationState = {
         wallePartsRotInit: 0, //initial rotation angle of Wall-E hand
@@ -175,20 +141,16 @@ This is a Wall-E scene where Wall-E is animated to gift a stem to Eve and she sw
         time: 0
       };
     }
-
-
     function firstState() {
       resetState();
       hand.rotation.y=animationState.wallePartsRotInit;
       neckNhead.rotation.y= animationState.wallePartsRotInit;
       head.rotation.z=animationState.wallePartsRotInit;
       eve.rotation.y = animationState.eveRotationInit;
-
       TW.render();
     }
 // turns Wall-E's head towards Eve
     function updateHead(ts){
-
      if (ts>animationParams.headMotion_begin && ts < animationParams.headMotion_end){
       neckNhead.rotation.y += animationParams.headMaxRotation/ (animationParams.headMotion_end-animationParams.headMotion_begin);
     }
@@ -205,9 +167,7 @@ This is a Wall-E scene where Wall-E is animated to gift a stem to Eve and she sw
     if (ts>animationParams.headTilt_begin && ts < animationParams.headTilt_end){
       head.rotation.z += animationParams.headTiltMax/ (animationParams.headTilt_end-animationParams.headTilt_begin);
     }
-
   }
-
 //animated Eve such that she swirls up and down
   function updateEve(ts) {
     if (ts>animationParams.eveUp_begin && ts < animationParams.eveUp_end){
@@ -215,12 +175,10 @@ This is a Wall-E scene where Wall-E is animated to gift a stem to Eve and she sw
       eve.rotation.y += animationParams.eveRotation/ (animationParams.eveUp_end-animationParams.eveUp_begin);
       eve.position.y +=animationParams.eveJumpHeight/ (animationParams.eveUp_end-animationParams.eveUp_begin);
     }
-
   }
   if (ts>animationParams.eveDown_begin && ts < animationParams.eveDown_end){
    for (i = 0; i < 4; i++) { 
     eve.rotation.y += animationParams.eveRotation/ (animationParams.eveDown_end-animationParams.eveDown_begin);
-
     eve.position.y -=animationParams.eveJumpHeight/ (animationParams.eveDown_end-animationParams.eveDown_begin);
   }
 }
@@ -228,35 +186,27 @@ This is a Wall-E scene where Wall-E is animated to gift a stem to Eve and she sw
 if (ts>animationParams.eveBack_begin && ts < animationParams.eveBack_end) {
   eve.rotation.y += animationParams.eveRotationInit/ (animationParams.eveBack_end-animationParams.eveBack_begin);
 } 
-
 }
-
 function updateWalle(ts){
     //console.log("time is " + ts);
     updateHead(ts);
     updateHand(ts);
     updateTilt(ts);
     updateEve(ts);
-
   }
 // updates the scene to initial values
   function updateState(){
     animationState.time +=1;
     updateWalle(animationState.time);
   }
-
-
 //value to stop the animation
 var animationId = null;
-
 // triggers animation of the scene
 function animateScene() {
   updateState();
   animationId = requestAnimationFrame( animateScene );
   renderer.render(scene, state.cameraObject);
-
 }
-
 function animate() {
   animationId = requestAnimationFrame( animate );
   render();
@@ -265,13 +215,10 @@ function animate() {
 Stops the animation if it's started.
 */
 function stopAnimation() {
-
   if (animationId != null) {
     cancelAnimationFrame(animationId);
   }
 }
-
-
 function render() {
  glassEyeL.visible = false;
  glassEyeR.visible = false;
@@ -282,13 +229,10 @@ function render() {
  glassEyeR.visible = true;
  renderer.render(scene, state.cameraObject); //re-render the scene using the TW camera
  }
-
  animate();
-
  TW.setKeyboardCallback("g",animateScene,"go:  start animation");
  TW.setKeyboardCallback("0",firstState,"reset animation");
  TW.setKeyboardCallback("s",stopAnimation,"stop animation");
-
  TW.viewFromFront();        
  </script>
 </body>
