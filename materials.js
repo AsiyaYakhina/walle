@@ -1,33 +1,49 @@
 
-    // script is now loaded and executed.
-    // put your dependent JS here.
 
-var textureEyeCover = new THREE.ImageUtils.loadTexture("darkMetalEye.jpg", 
+      var groundTexture = new THREE.ImageUtils.loadTexture("ground.jpg", 
     new THREE.UVMapping(),
     function () {
-      console.log("eyeTexture is loaded.");
+      console.log("ground.jpg is loaded.");
       imageLoaded = true;
       TW.render();
     });
 
 
+  groundTexture.wrapS = groundTexture.wrapT =THREE.MirroredRepeatWrapping;
 
-  textureEyeCover.wrapS = textureEyeCover.wrapT = THREE.MirroredRepeatWrapping;
-  textureEyeCover.repeat.set( 1 / 5, 1 / 5 );
-  textureEyeCover.offset.set( 0.8, 0.9 );
-
-
-  var eyeCoverMaterial = new THREE.MeshPhongMaterial(
+  var groundMat = new THREE.MeshPhongMaterial(
     { color: 0x898989,
       specular:0xFFFFFF,
       shininess: 0,
-      map: textureEyeCover,
-      side: THREE.DoubleSide,
-      castShadow: true
+      map: groundTexture,
     });
 
+    var textureEyeCover = new THREE.ImageUtils.loadTexture("darkMetalEye.jpg", 
+      new THREE.UVMapping(),
+      function () {
+        console.log("eyeTexture is loaded.");
+        imageLoaded = true;
+        TW.render();
+      });
 
-var textureEye = new THREE.ImageUtils.loadTexture("whiteMetal.jpg", 
+
+
+    textureEyeCover.wrapS = textureEyeCover.wrapT = THREE.MirroredRepeatWrapping;
+    textureEyeCover.repeat.set( 1 / 5, 1 / 5 );
+    textureEyeCover.offset.set( 0.8, 0.9 );
+
+
+    var eyeCoverMaterial = new THREE.MeshPhongMaterial(
+      { color: 0x898989,
+        specular:0xFFFFFF,
+        shininess: 0,
+        map: textureEyeCover,
+        side: THREE.DoubleSide,
+        castShadow: true
+      });
+
+
+    var textureEye = new THREE.ImageUtils.loadTexture("whiteMetal.jpg", 
       new THREE.UVMapping(),
       function () {
         console.log("eyeTexture is loaded.");
@@ -48,24 +64,24 @@ var textureEye = new THREE.ImageUtils.loadTexture("whiteMetal.jpg",
         receiveShadow: true
       });
 
-     var steelMaterial =  new THREE.MeshPhongMaterial(  {color: 0x121212,
-   ambient: 0x121212,
-   specular: 0x4F4F4F            
- });
+    var steelMaterial =  new THREE.MeshPhongMaterial(  {color: 0x121212,
+     ambient: 0x121212,
+     specular: 0x4F4F4F            
+   });
 
-       var eyeLightMaterial = new THREE.MeshPhongMaterial(
-    { color: 0x898989,
-      ambient: 0x898989,
-      specular:0x545454
-    });
+    var eyeLightMaterial = new THREE.MeshPhongMaterial(
+      { color: 0x898989,
+        ambient: 0x898989,
+        specular:0x545454
+      });
 
-         var  eyeDarkMaterial = new THREE.MeshPhongMaterial(
-    { color: 0x000000,
-      ambient: 0x000000,
-      specular:0x545454
-    });
+    var  eyeDarkMaterial = new THREE.MeshPhongMaterial(
+      { color: 0x000000,
+        ambient: 0x000000,
+        specular:0x545454
+      });
 
-  var yellowTexture = new THREE.ImageUtils.loadTexture("yellowMetal2.jpg", 
+    var yellowTexture = new THREE.ImageUtils.loadTexture("yellowMetal2.jpg", 
       new THREE.UVMapping(),
       function () {
         console.log("yellowTexture is loaded.");
@@ -87,7 +103,7 @@ var textureEye = new THREE.ImageUtils.loadTexture("whiteMetal.jpg",
         receiveShadow: true
       });
 
-  var yellowTextureforCyl = new THREE.ImageUtils.loadTexture("yellowMetal2.jpg", 
+    var yellowTextureforCyl = new THREE.ImageUtils.loadTexture("yellowMetal2.jpg", 
       new THREE.UVMapping(),
       function () {
         console.log("yellowTexture is loaded.");
@@ -96,8 +112,8 @@ var textureEye = new THREE.ImageUtils.loadTexture("whiteMetal.jpg",
       });
 
     yellowTextureforCyl.wrapS = yellowTexture.wrapT = THREE.MirroredRepeatWrapping;
-  
-      var yellowMaterialForCyl = new THREE.MeshPhongMaterial(
+
+    var yellowMaterialForCyl = new THREE.MeshPhongMaterial(
       { color: 0x898989,
         specular:0xFFFFFF,
         shininess: 0,
@@ -106,7 +122,7 @@ var textureEye = new THREE.ImageUtils.loadTexture("whiteMetal.jpg",
       });
 
 
-        var yellowNeckText = new THREE.ImageUtils.loadTexture("neckYellow.jpg", 
+    var yellowNeckText = new THREE.ImageUtils.loadTexture("neckYellow.jpg", 
       new THREE.UVMapping(),
       function () {
         console.log("yellowTexture is loaded.");
@@ -115,8 +131,8 @@ var textureEye = new THREE.ImageUtils.loadTexture("whiteMetal.jpg",
       });
 
     yellowNeckText.wrapS = yellowNeckText.wrapT = THREE.MirroredRepeatWrapping;
-  
-      var yellowNeckMat= new THREE.MeshPhongMaterial(
+
+    var yellowNeckMat= new THREE.MeshPhongMaterial(
       { color: 0x898989,
         specular:0xFFFFFF,
         shininess: 0,
@@ -125,18 +141,18 @@ var textureEye = new THREE.ImageUtils.loadTexture("whiteMetal.jpg",
       });
 
 
-var textureWheel = new THREE.ImageUtils.loadTexture("wheel.jpg", 
-    new THREE.UVMapping(),
-    function () {
-      console.log("eyeTexture is loaded.");
-      imageLoaded = true;
-      TW.render();
-    });
+    var textureWheel = new THREE.ImageUtils.loadTexture("wheel.jpg", 
+      new THREE.UVMapping(),
+      function () {
+        console.log("eyeTexture is loaded.");
+        imageLoaded = true;
+        TW.render();
+      });
 
 
 
-  textureWheel.wrapS = textureWheel.wrapT = THREE.MirroredRepeatWrapping;
-   textureWheel.repeat.set( 2, 2);
+    textureWheel.wrapS = textureWheel.wrapT = THREE.MirroredRepeatWrapping;
+    textureWheel.repeat.set( 2, 2);
   // textureWheel.offset.set( 0.8, 0.9 );
 
 
@@ -151,7 +167,7 @@ var textureWheel = new THREE.ImageUtils.loadTexture("wheel.jpg",
 
 
 
-var textureHand = new THREE.ImageUtils.loadTexture("handText2.jpg", 
+  var textureHand = new THREE.ImageUtils.loadTexture("handText2.jpg", 
     new THREE.UVMapping(),
     function () {
       console.log("hadTexture is loaded.");
@@ -176,7 +192,7 @@ var textureHand = new THREE.ImageUtils.loadTexture("handText2.jpg",
     });
 
 
-var textureHandMet = new THREE.ImageUtils.loadTexture("handMetal.jpg", 
+  var textureHandMet = new THREE.ImageUtils.loadTexture("handMetal.jpg", 
     new THREE.UVMapping(),
     function () {
       console.log("hadTextureMet is loaded.");
@@ -201,7 +217,7 @@ var textureHandMet = new THREE.ImageUtils.loadTexture("handMetal.jpg",
     });
 
 
-var groundTexture = new THREE.ImageUtils.loadTexture("ground.jpg", 
+  var groundTexture = new THREE.ImageUtils.loadTexture("ground.jpg", 
     new THREE.UVMapping(),
     function () {
       console.log("ground.jpg is loaded.");
@@ -209,7 +225,7 @@ var groundTexture = new THREE.ImageUtils.loadTexture("ground.jpg",
       TW.render();
     });
 
-var groundBump = new THREE.ImageUtils.loadTexture("groundBump.jpg", 
+  var groundBump = new THREE.ImageUtils.loadTexture("groundBump.jpg", 
     new THREE.UVMapping(),
     function () {
       console.log("groundBump.jpg is loaded.");
@@ -230,7 +246,7 @@ var groundBump = new THREE.ImageUtils.loadTexture("groundBump.jpg",
       map: groundTexture,
       bumpMap: groundBump
 
-      });
+    });
 
 
   //  var textureYellowDetail = new THREE.ImageUtils.loadTexture("yellowDetail.jpg", 
@@ -255,7 +271,7 @@ var groundBump = new THREE.ImageUtils.loadTexture("groundBump.jpg",
   //     map: textureYellowDetail,
   //     castShadow: true
   //   });
- 
+
 
 
   // var yellowRustTexture = new THREE.ImageUtils.loadTexture("rustyYello.jpg", 
