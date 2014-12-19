@@ -32,6 +32,12 @@ This is a Wall-E scene where Wall-E is animated to gift a stem to Eve and she sw
 </head>
 <body>
 
+  <div>
+    <p>
+      This is a scene inspired by 
+    </p>
+    </div>
+
   <script id="prog">
 
   var renderer = new THREE.WebGLRenderer();
@@ -65,9 +71,27 @@ This is a Wall-E scene where Wall-E is animated to gift a stem to Eve and she sw
   ground.position.set(0,-21.6,-70);
   scene.add(ground);
 
+ var backgroundText = new THREE.ImageUtils.loadTexture("citiscape.jpg", 
+    new THREE.UVMapping(),
+    function () {
+      console.log("citiscape is loaded.");
+      imageLoaded = true;
+      TW.render();
+    });
+
+ // textureYellowDetail.wrapS = textureYellowDetail.wrapT = THREE.MirroredRepeatWrapping;
+
+  var backgroundMat = new THREE.MeshPhongMaterial(
+    { color: 0x898989,
+      specular:0xFFFFFF,
+      shininess: 0,
+      map: backgroundText,
+    });
+
+
   //creating a sphere to create a sky background for the scene
-  var backgroundGeom = new THREE.SphereGeometry(200,100,100);
-  backgroundMat = new THREE.MeshBasicMaterial({color: 0xc9b195, side: THREE.BackSide});
+  var backgroundGeom = new THREE.SphereGeometry(200,30,30);
+  //backgroundMat = new THREE.MeshBasicMaterial({color: 0xc9b195, side: THREE.BackSide});
   var background = new THREE.Mesh(backgroundGeom, backgroundMat);
   background.position.set(0,50,-60);
   scene.add(background);

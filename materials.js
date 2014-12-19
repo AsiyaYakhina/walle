@@ -38,8 +38,7 @@ var eyeCoverMaterial = new THREE.MeshPhongMaterial(
     specular:0xFFFFFF,
     shininess: 0,
     map: textureEyeCover,
-    side: THREE.DoubleSide,
-    castShadow: true
+    side: THREE.DoubleSide
   });
 
 
@@ -162,7 +161,6 @@ textureWheel.repeat.set( 3, 1);
       shininess: 0,
       map: textureWheel,
       side: THREE.DoubleSide,
-      castShadow: true
     });
 
 
@@ -188,7 +186,6 @@ textureWheel.repeat.set( 3, 1);
       shininess: 0,
       map: textureHand,
       side: THREE.DoubleSide,
-      castShadow: true
     });
 
 
@@ -213,7 +210,6 @@ textureWheel.repeat.set( 3, 1);
       shininess: 0,
       map: textureHandMet,
       side: THREE.DoubleSide,
-      castShadow: true
     });
 
 
@@ -265,7 +261,26 @@ textureWheel.repeat.set( 3, 1);
       specular:0xFFFFFF,
       shininess: 0,
       map: textureYellowDetail,
-      castShadow: true
+    });
+
+
+
+
+  var backgroundText = new THREE.ImageUtils.loadTexture("citiscape.jpg", 
+    new THREE.UVMapping(),
+    function () {
+      console.log("citiscape is loaded.");
+      imageLoaded = true;
+      TW.render();
+    });
+
+ // textureYellowDetail.wrapS = textureYellowDetail.wrapT = THREE.MirroredRepeatWrapping;
+
+  var backgroundMat = new THREE.MeshPhongMaterial(
+    { color: 0x898989,
+      specular:0xFFFFFF,
+      shininess: 0,
+      map: backgroundText,
     });
 
 
