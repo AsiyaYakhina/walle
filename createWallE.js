@@ -1,5 +1,4 @@
 
-
 //This file includes helper functions that help create Wall-E, as well as the
 // actual function that creates Wall-E holding a grass stem. 
 //
@@ -10,9 +9,11 @@
 // Wall-E dimensions:  20 wide
 
 
+//This function creates Wall-E that's holding a stem in one of his hands
 function createWallE() {
-var wallE = new THREE.Object3D();
-
+  var wallE = new THREE.Object3D();
+//using the glass ball function from the library to make Wall-E's
+//glass eyes that the reflect the scene that Wall-E "sees"
 
 var marbleSet1 = createMarble(0x524CFD, 0x444444, 5, 1.9);
 glassEyeL = marbleSet1[0];
@@ -23,18 +24,21 @@ glassEyeR = marbleSet2[0];
 glassEyeCamR = marbleSet2[1];
 
 
+// creating Wall-E's body (the central box)
+var bodyBoxGeom = new THREE.BoxGeometry(12,10,12);
+addTextureCoords(bodyBoxGeom, 5, 5);
+var bodyBox = new THREE.Mesh(bodyBoxGeom, yellowMaterial);
+bodyBox.position.set(1,-14,0);
 
- var bodyBoxGeom = new THREE.BoxGeometry(12,10,12);
- addTextureCoords(bodyBoxGeom, 5, 5);
- var bodyBox = new THREE.Mesh(bodyBoxGeom, yellowMaterial);
- bodyBox.position.set(1,-14,0);
-
-head = createHead(glassEyeL, glassEyeCamL, glassEyeR, glassEyeCamR);
+// creating Wall-E's head (which basically includes all of its eye details)
+head = createHead();
 head.position.y = -1;
 
-wholeNeck = createNeck();
-wholeNeck.position.set(0,0.7,-1);
+ //creating Wall-E's neck (the part that connects the head with the body box)
+ wholeNeck = createNeck();
+ wholeNeck.position.set(0,0.7,-1);
 
+//creating Wall-E's wheels
 var wheelL = createWheel();
 wheelL.position.set(-7,-22,0)
 wheelR = createWheel();
@@ -42,24 +46,28 @@ wheelR.position.set(9,-22,0)
 wallE.add(wheelL); // add to wallE
 wallE.add(wheelR);
 
-  hand = createHand();
-  var handLeft = hand.clone();
-  handLeft.rotation.z = Math.PI;
-  handLeft.rotation.y = Math.PI/10;
-  handLeft.position.set(-6,-14,4);
+//creating Wall-E's hands
+hand = createHand();
+var handLeft = hand.clone();
+handLeft.rotation.z = Math.PI;
+handLeft.rotation.y = Math.PI/10;
+handLeft.position.set(-6,-14,4);
 
-  wallE.add(handLeft);
-
-  var handPivot = new THREE.Object3D();
-  handPivot.position.set(7,-13,4);
-  handPivot.add(hand);
+wallE.add(handLeft);
+//creating a hand pivot to help control the hand's rotation
+// during animation
+var handPivot = new THREE.Object3D();
+handPivot.position.set(7,-13,4);
+handPivot.add(hand);
+  //creating a stem that Wall-E holds
   stem = createStem();
   hand.add(stem);
   stem.position.set(-2,0,9);
   wallE.add(handPivot);
 
-  var headPivot = new THREE.Object3D();
-//headPivot.add(new THREE.Mesh(new THREE.SphereGeometry(2), material));
+// creating a pivot point to control rotation of the head and neck parts
+// during animation
+var headPivot = new THREE.Object3D();
 headPivot.position.set(1,-8,0);
 neckNhead = new THREE.Object3D();
 neckNhead.add(head);
@@ -74,44 +82,40 @@ return wallE;
 
 }
 
+//This helper funciton create the front part of one eye (the glass ball, pupil and other details)
 
- function createEyeFront(glassEye, glassCam) {
-    var eyeFront = new THREE.Object3D();
-    glassEye.scale.z = 0.7;
+function createEyeFront(glassEye, glassCam) {
+  var eyeFront = new THREE.Object3D();
+  //squishing the glassBall to make ir resemble Wall-E's eyes better
+  glassEye.scale.z = 0.7;
+// adding various eye details to add some visual complexity to the eyes
+  var eyeBigCircGeom = new THREE.TorusGeometry( 1.9, 0.1, 16, 100 ); 
+  var eyeBigCirc = new THREE.Mesh( eyeBigCircGeom,steelMaterial );
+  eyeBigCirc.position.set(-2.5, 0.8,5 );
 
-    var eyeBigCircGeom = new THREE.TorusGeometry( 1.9, 0.1, 16, 100 ); 
-    var eyeBigCirc = new THREE.Mesh( eyeBigCircGeom,steelMaterial );
-    eyeBigCirc.position.set(-2.5, 0.8,5 );
-
-    var eyeBorderGeom = new THREE.TorusGeometry(1, 0.1, 16, 100);
-    var eyeBorder = new THREE.Mesh(eyeBorderGeom, steelMaterial);
-    eyeBorder.position.set(-2.5,1,5.1);
-
-
-    var eyeLightPartGeom = new THREE.CircleGeometry(1,100);
-    eyeLightPart = new THREE.Mesh(eyeLightPartGeom, eyeLightMaterial);
-    eyeLightPart.position.set(-2.5,1,5.1);
-  // scene.add(eyeLightPart);
-
-
+  var eyeBorderGeom = new THREE.TorusGeometry(1, 0.1, 16, 100);
+  var eyeBorder = new THREE.Mesh(eyeBorderGeom, steelMaterial);
+  eyeBorder.position.set(-2.5,1,5.1);
+// creating the light circle on the eye
+  var eyeLightPartGeom = new THREE.CircleGeometry(1,100);
+  eyeLightPart = new THREE.Mesh(eyeLightPartGeom, eyeLightMaterial);
+  eyeLightPart.position.set(-2.5,1,5.1);
+ //creating the dark circle on the eye
   var eyeDarkPartGeom = new THREE.CircleGeometry(1.9,100);
   var eyeDarkPart = new THREE.Mesh(eyeDarkPartGeom, eyeDarkMaterial);
   eyeDarkPart.position.set(-2.5, 0.8,5);
-  // scene.add(eyeDarkPart);
-
+//creating the pupil (the smallest dark circle)
   var pupilGeom = new THREE.CircleGeometry(0.7, 100);
   var pupil = new THREE.Mesh(pupilGeom, eyeDarkMaterial);
   pupil.position.set(-2.5, 1,5.2);
-  // scene.add(pupil);
-
+  
+  // nesting all of the front eye details in the parent object
   eyeFront.add(eyeBigCirc);
   eyeFront.add(glassEye);
   eyeFront.add(eyeBorder);
   eyeFront.add(eyeLightPart);
   eyeFront.add(eyeDarkPart);
   eyeFront.add(pupil);
-
-
 
   glassEye.position.set(-2.5, 0.8,5);
   glassCam.position.set(-2.5,0.8,5);
@@ -120,8 +124,8 @@ return wallE;
 
 }
 
-
-function createHead(glassEyeL, glassEyeCamL, glassEyeR, glassEyeCamR) {
+//This helper function
+function createHead() {
   var head = new THREE.Object3D();
 
   headGeom = new THREE.BoxGeometry(4,2.5,3);
@@ -152,7 +156,7 @@ function createHead(glassEyeL, glassEyeCamL, glassEyeR, glassEyeCamR) {
 
 
 
- 
+
 function createNeck() {
 
   var wholeNeck = new THREE.Object3D();  
@@ -233,82 +237,82 @@ function createNeck() {
 
 
 
-  topBoxGeom = new THREE.BoxGeometry(1.4,2.2,0.3);
-  addTextureCoords(headGeom, 3, 3);
-  topBox = new THREE.Mesh (topBoxGeom, yellowDetailMat);
-  topBox.rotation.x = 2*Math.PI-Math.PI/6;
-  topBox.position.set(1,-2.8,3.6);
+topBoxGeom = new THREE.BoxGeometry(1.4,2.2,0.3);
+addTextureCoords(headGeom, 3, 3);
+topBox = new THREE.Mesh (topBoxGeom, yellowDetailMat);
+topBox.rotation.x = 2*Math.PI-Math.PI/6;
+topBox.position.set(1,-2.8,3.6);
 
-  wholeNeck.add(bodyCyl);
-  wholeNeck.add(bodyDisc);
-  wholeNeck.add(neckBase);
-  wholeNeck.add(neckHolder1);
-  wholeNeck.add(neckHolder2);
-  wholeNeck.add(topBox);
+wholeNeck.add(bodyCyl);
+wholeNeck.add(bodyDisc);
+wholeNeck.add(neckBase);
+wholeNeck.add(neckHolder1);
+wholeNeck.add(neckHolder2);
+wholeNeck.add(topBox);
 
-  return wholeNeck;
+return wholeNeck;
 }
 
 
-  function createWheel () {
+function createWheel () {
 
-    var wheel = new THREE.Object3D();
-    var surfPoints1 = [[ [ -2,7,0],  [-2,7,2], [-2,4,6], [-2,2,6] ],
-    [ [-1,7,0], [-1,7,2],  [-1,4,6], [-1,2,6] ],
-    [ [0,7,0], [0,7,2],  [0,4,6],  [0,2,6] ],
-    [ [2,7,0],  [2,7,2],  [2,4,6],  [2,2,6] ] ];
-
-
-
-    var surfPoints2 = [ [ [-2,2,6],  [-2,0,6], [-2,0,-6], [-2,2,-6] ],
-    [ [-1,2,6], [-1,0,6],  [-1,0,-6], [-1,2,-6] ],
-    [ [0,2,6], [0,0,6],  [0,0,-6],  [0,2,-6] ],
-    [ [2,2,6],  [2,0,6],  [2,0,-6],  [2,2,-6] ] ];
+  var wheel = new THREE.Object3D();
+  var surfPoints1 = [[ [ -2,7,0],  [-2,7,2], [-2,4,6], [-2,2,6] ],
+  [ [-1,7,0], [-1,7,2],  [-1,4,6], [-1,2,6] ],
+  [ [0,7,0], [0,7,2],  [0,4,6],  [0,2,6] ],
+  [ [2,7,0],  [2,7,2],  [2,4,6],  [2,2,6] ] ];
 
 
 
-    var surfGeom1 = new THREE.BezierSurfaceGeometry( surfPoints1.reverse(), 60, 60 );
-    var surfGeom2 = new THREE.BezierSurfaceGeometry(surfPoints2.reverse(), 60,60);
-
-    var eyeCov1 = new THREE.SceneUtils.createMultiMaterialObject(surfGeom1, [wheelMaterial]);
-
-    var eyeCov2 = new THREE.SceneUtils.createMultiMaterialObject(surfGeom2, [wheelMaterial]);
-
-    var curve3 = eyeCov1.clone();
-    curve3.rotation.y= Math.PI;
-    wheel.add(eyeCov1);
-    wheel.add(eyeCov2);
-    wheel.add(curve3);
-
-    return wheel;
-  }
+  var surfPoints2 = [ [ [-2,2,6],  [-2,0,6], [-2,0,-6], [-2,2,-6] ],
+  [ [-1,2,6], [-1,0,6],  [-1,0,-6], [-1,2,-6] ],
+  [ [0,2,6], [0,0,6],  [0,0,-6],  [0,2,-6] ],
+  [ [2,2,6],  [2,0,6],  [2,0,-6],  [2,2,-6] ] ];
 
 
 
- var arm = new THREE.Shape();
- arm.moveTo(1.4,-0.31);
- arm.lineTo(3,-2);
- arm.lineTo(3, -4);
- arm.lineTo(2.5, -4);
- arm.lineTo(2.5,-2);
- arm.lineTo(1,-1.9);
+  var surfGeom1 = new THREE.BezierSurfaceGeometry( surfPoints1.reverse(), 60, 60 );
+  var surfGeom2 = new THREE.BezierSurfaceGeometry(surfPoints2.reverse(), 60,60);
+
+  var eyeCov1 = new THREE.SceneUtils.createMultiMaterialObject(surfGeom1, [wheelMaterial]);
+
+  var eyeCov2 = new THREE.SceneUtils.createMultiMaterialObject(surfGeom2, [wheelMaterial]);
+
+  var curve3 = eyeCov1.clone();
+  curve3.rotation.y= Math.PI;
+  wheel.add(eyeCov1);
+  wheel.add(eyeCov2);
+  wheel.add(curve3);
+
+  return wheel;
+}
 
 
 
- var neckPoints = [];
- neckPoints.push(new THREE.Vector3(0,0.5,0));
- neckPoints.push(new THREE.Vector3(1, -0.8, 0));
- neckPoints.push(new THREE.Vector3(0.8, -1.75,0));
- neckPoints.push(new THREE.Vector3(0, -2,0));
-
- var neckPoints2 = [];
- neckPoints2.push(new THREE.Vector3(0,0.5,0));
- neckPoints2.push(new THREE.Vector3(-1, -0.8, 0));
- neckPoints2.push(new THREE.Vector3(-0.8, -1.75,0));
- neckPoints2.push(new THREE.Vector3(0, -2,0));
+var arm = new THREE.Shape();
+arm.moveTo(1.4,-0.31);
+arm.lineTo(3,-2);
+arm.lineTo(3, -4);
+arm.lineTo(2.5, -4);
+arm.lineTo(2.5,-2);
+arm.lineTo(1,-1.9);
 
 
- 
+
+var neckPoints = [];
+neckPoints.push(new THREE.Vector3(0,0.5,0));
+neckPoints.push(new THREE.Vector3(1, -0.8, 0));
+neckPoints.push(new THREE.Vector3(0.8, -1.75,0));
+neckPoints.push(new THREE.Vector3(0, -2,0));
+
+var neckPoints2 = [];
+neckPoints2.push(new THREE.Vector3(0,0.5,0));
+neckPoints2.push(new THREE.Vector3(-1, -0.8, 0));
+neckPoints2.push(new THREE.Vector3(-0.8, -1.75,0));
+neckPoints2.push(new THREE.Vector3(0, -2,0));
+
+
+
 
 var mats = new THREE.MeshFaceMaterial(
 
@@ -381,12 +385,12 @@ function createTexturedHand (handGeom) {
     var wrist = new THREE.Mesh(wristGeom, yellowMaterial);
 
     var armGeom = new THREE.ExtrudeGeometry(arm,{amount: 1.4,
-  bevelThickness: 0,
-  bevelSize: 0,
-  bevelSegments: 0,
-  bevelEnabled: false,
-  curveSegments: 0,
-  steps: 1})
+      bevelThickness: 0,
+      bevelSize: 0,
+      bevelSegments: 0,
+      bevelEnabled: false,
+      curveSegments: 0,
+      steps: 1})
     var armFirst = new THREE.Mesh(armGeom, handMetalMat);
     var armSecond = armFirst.clone();
     
@@ -504,26 +508,26 @@ var surfPoints3 = [ [ [1.7,4,0],  [0.5,5,0], [-3,5.4,0], [-6.1,6.1,0] ],
 [ [1.7,4,6],  [0.5,5,6],  [-3,5.4,6],  [-6.1,6.1,6] ] ];
 
 
-  var surfGeom1 = new THREE.BezierSurfaceGeometry( surfPoints1.reverse(), 60, 60 );
-  var surfGeom2 = new THREE.BezierSurfaceGeometry(surfPoints2.reverse(), 60,60);
-  var surfGeom3 = new THREE.BezierSurfaceGeometry(surfPoints3.reverse(), 60,60);
+var surfGeom1 = new THREE.BezierSurfaceGeometry( surfPoints1.reverse(), 60, 60 );
+var surfGeom2 = new THREE.BezierSurfaceGeometry(surfPoints2.reverse(), 60,60);
+var surfGeom3 = new THREE.BezierSurfaceGeometry(surfPoints3.reverse(), 60,60);
 
-  var eyeCov1 = new THREE.SceneUtils.createMultiMaterialObject(surfGeom1, [eyeCoverMaterial]);
+var eyeCov1 = new THREE.SceneUtils.createMultiMaterialObject(surfGeom1, [eyeCoverMaterial]);
 
-  var eyeCov2 = new THREE.SceneUtils.createMultiMaterialObject(surfGeom2, [eyeCoverMaterial]);
+var eyeCov2 = new THREE.SceneUtils.createMultiMaterialObject(surfGeom2, [eyeCoverMaterial]);
 
-  var eyeCov3 = new THREE.SceneUtils.createMultiMaterialObject(surfGeom3, [eyeCoverMaterial]);
+var eyeCov3 = new THREE.SceneUtils.createMultiMaterialObject(surfGeom3, [eyeCoverMaterial]);
 
 if (side == -1) {
   eyeCov1.rotation.y= Math.PI;
   eyeCov2.rotation.y= Math.PI;
   eyeCov3.rotation.y= Math.PI;
-   eyeCov1.position.z= 1;
+  eyeCov1.position.z= 1;
   eyeCov2.position.z= 1;
   eyeCov3.position.z= 1;
 
   console.log("SIDE -1");
- }
+}
 eyeBase.add(eyeCov1);
 eyeBase.add(eyeCov2);
 eyeBase.add(eyeCov3);
@@ -533,14 +537,14 @@ return eyeBase;
 }
 
 createHandwFaces = function(width, height, depth) {
-    var w = width, h = height, len = depth;
-    var handGeom = new THREE.Geometry();
+  var w = width, h = height, len = depth;
+  var handGeom = new THREE.Geometry();
     // add the front
    handGeom.vertices.push(new THREE.Vector3(0, 0, 0)); // vertex 0
    handGeom.vertices.push(new THREE.Vector3(w, 0, 0)); // vertex 1
    handGeom.vertices.push(new THREE.Vector3(w, h, 0)); // vertex 2
    handGeom.vertices.push(new THREE.Vector3(0, h, 0)); // vertex 3
-    
+
     // just add the back also manually
    handGeom.vertices.push(new THREE.Vector3(0, 0, -len)); // vertex 4
    handGeom.vertices.push(new THREE.Vector3(w, 0, -len)); // vertex 5
@@ -555,11 +559,11 @@ createHandwFaces = function(width, height, depth) {
     // back faces
     handGeom.faces.push(new THREE.Face3(4, 6, 5)); // 3
     handGeom.faces.push(new THREE.Face3(4, 7, 6));//2
-  
+
     // roof faces.
     handGeom.faces.push(new THREE.Face3(3, 6, 7)); // 4
     handGeom.faces.push(new THREE.Face3(3, 2, 6));//5
-  
+
 
     // side faces
     handGeom.faces.push(new THREE.Face3(0, 3, 4)); // 6
@@ -576,18 +580,18 @@ createHandwFaces = function(width, height, depth) {
     // barnGeometry.computeVertexNormals(true); only for "rounded" objects
 
     return handGeom;
-};
+  };
 
 
 
-function addTextureCoords(boxGeom, maxT, maxS) {
+  function addTextureCoords(boxGeom, maxT, maxS) {
 
-  var UVs = [];
-  function faceCoords(as,at, bs,bt, cs,ct) {
-    UVs.push( [ new THREE.Vector2(as,at),
-      new THREE.Vector2(bs,bt),
-      new THREE.Vector2(cs,ct)] );
-  }
+    var UVs = [];
+    function faceCoords(as,at, bs,bt, cs,ct) {
+      UVs.push( [ new THREE.Vector2(as,at),
+        new THREE.Vector2(bs,bt),
+        new THREE.Vector2(cs,ct)] );
+    }
       // front
       faceCoords(0,0, maxS,0, maxS,maxT);
       faceCoords(0,0, maxS,maxT, 0,maxT);
