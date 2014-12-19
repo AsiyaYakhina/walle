@@ -6,14 +6,23 @@
 // which you can find in the same directory as this file. For the grass stem to show
 // up you will also need to import createStem.js
 //
-// Wall-E dimensions:  20 wide
-
 
 //This function creates Wall-E that's holding a stem in one of his hands
 function createWallE() {
   var wallE = new THREE.Object3D();
 //using the glass ball function from the library to make Wall-E's
 //glass eyes that the reflect the scene that Wall-E "sees"
+
+
+//NOTE: for the eyes to continuously reflect the scene, you need to place
+//the following global variables outside the function:
+//   var glassEyeL;
+//   var glassEyeCamL; 
+//   var glassEyeR;
+//   var glassEyeCamR; 
+//You also need to update them with the help of render and animate functions like so:
+ // glassEyeCamL.updateCubeMap(renderer, scene);
+ // glassEyeCamR.updateCubeMap(renderer, scene);
 
 var marbleSet1 = createMarble(0x524CFD, 0x444444, 5, 1.9);
 glassEyeL = marbleSet1[0];
@@ -341,33 +350,33 @@ function createWheel () {
 // the wheel is made out of three bezier surfaces
 //Wall-E's wheel resembles a triangle with 2 equal sides
 //wheelSurfPoints1 is going to represent the side of the trianlgle
-  var wheelSurfPoints1 = [[ [ -2,7,0],  [-2,7,2], [-2,4,6], [-2,2,6] ],
-  [ [-1,7,0], [-1,7,2],  [-1,4,6], [-1,2,6] ],
-  [ [0,7,0], [0,7,2],  [0,4,6],  [0,2,6] ],
-  [ [2,7,0],  [2,7,2],  [2,4,6],  [2,2,6] ] ];
+var wheelSurfPoints1 = [[ [ -2,7,0],  [-2,7,2], [-2,4,6], [-2,2,6] ],
+[ [-1,7,0], [-1,7,2],  [-1,4,6], [-1,2,6] ],
+[ [0,7,0], [0,7,2],  [0,4,6],  [0,2,6] ],
+[ [2,7,0],  [2,7,2],  [2,4,6],  [2,2,6] ] ];
 
 //while wheeSurfPoints2 is gonig to be the base of the triangle
 
-  var wheelSurfPoints2 = [ [ [-2,2,6],  [-2,0,6], [-2,0,-6], [-2,2,-6] ],
-  [ [-1,2,6], [-1,0,6],  [-1,0,-6], [-1,2,-6] ],
-  [ [0,2,6], [0,0,6],  [0,0,-6],  [0,2,-6] ],
-  [ [2,2,6],  [2,0,6],  [2,0,-6],  [2,2,-6] ] ];
+var wheelSurfPoints2 = [ [ [-2,2,6],  [-2,0,6], [-2,0,-6], [-2,2,-6] ],
+[ [-1,2,6], [-1,0,6],  [-1,0,-6], [-1,2,-6] ],
+[ [0,2,6], [0,0,6],  [0,0,-6],  [0,2,-6] ],
+[ [2,2,6],  [2,0,6],  [2,0,-6],  [2,2,-6] ] ];
 
 //creating geometries
-  var wheelSurfGeom1 = new THREE.BezierSurfaceGeometry( wheelSurfPoints1.reverse(), 60, 60 );
-  var wheelSurfGeom2 = new THREE.BezierSurfaceGeometry(wheelSurfPoints2.reverse(), 60,60);
+var wheelSurfGeom1 = new THREE.BezierSurfaceGeometry( wheelSurfPoints1.reverse(), 60, 60 );
+var wheelSurfGeom2 = new THREE.BezierSurfaceGeometry(wheelSurfPoints2.reverse(), 60,60);
 
-  var wheelPart1 = new THREE.SceneUtils.createMultiMaterialObject(wheelSurfGeom1, [wheelMaterial]);
+var wheelPart1 = new THREE.SceneUtils.createMultiMaterialObject(wheelSurfGeom1, [wheelMaterial]);
 
-  var wheelPart2 = new THREE.SceneUtils.createMultiMaterialObject(wheelSurfGeom2, [wheelMaterial]);
+var wheelPart2 = new THREE.SceneUtils.createMultiMaterialObject(wheelSurfGeom2, [wheelMaterial]);
 // reflecting the created side of the triangle to get the opposite side
-  var wheelPart3 = wheelPart1.clone();
-  wheelPart3.rotation.y= Math.PI;
-  wheel.add(wheelPart1);
-  wheel.add(wheelPart2);
-  wheel.add(wheelPart3);
+var wheelPart3 = wheelPart1.clone();
+wheelPart3.rotation.y= Math.PI;
+wheel.add(wheelPart1);
+wheel.add(wheelPart2);
+wheel.add(wheelPart3);
 
-  return wheel;
+return wheel;
 }
 
 
@@ -382,11 +391,11 @@ var mats = new THREE.MeshFaceMaterial(
     //setting material indexes for the faces
     // to be able to selectively map textures
 //mapping the yellow metal texture on the following faces
-    for (i = 0; i<6; i++) {
-      handGeom.faces[i].materialIndex = 0;
-    }
+for (i = 0; i<6; i++) {
+  handGeom.faces[i].materialIndex = 0;
+}
     // mapping the stripy texture on one of the sides of the box
-     for (i = 6; i<8; i++) {
+    for (i = 6; i<8; i++) {
       handGeom.faces[i].materialIndex = 1;
     }
     //mapping the yellow metal texture on the following faces
@@ -402,10 +411,10 @@ var mats = new THREE.MeshFaceMaterial(
   }
 
  // Helper function that creates the whole hand
-  function createHand() { 
+ function createHand() { 
 
-    var wholeHand = new THREE.Object3D();
-    var handArm = new THREE.Object3D();
+  var wholeHand = new THREE.Object3D();
+  var handArm = new THREE.Object3D();
 
     // creating the shoulder of the arm
     var shoulderGeom = new THREE.CylinderGeometry(0.7,0.7,2,5,32);
@@ -427,13 +436,13 @@ arm.lineTo(2.5,-2);
 arm.lineTo(1,-1.9);
 
 // extruding the shape
-    var armGeom = new THREE.ExtrudeGeometry(arm,{amount: 1.4,
-      bevelThickness: 0,
-      bevelSize: 0,
-      bevelSegments: 0,
-      bevelEnabled: false,
-      curveSegments: 0,
-      steps: 1})
+var armGeom = new THREE.ExtrudeGeometry(arm,{amount: 1.4,
+  bevelThickness: 0,
+  bevelSize: 0,
+  bevelSegments: 0,
+  bevelEnabled: false,
+  curveSegments: 0,
+  steps: 1})
     // making two fingers
     var armFirst = new THREE.Mesh(armGeom, handMetalMat);
     var armSecond = armFirst.clone();
@@ -460,27 +469,27 @@ arm.lineTo(1,-1.9);
     handArm.rotation.z =Math.PI*2- Math.PI/2;
 
 //creatin the box part of the hand
-    var handFaces = createHandwFaces(1.4,2,6);
-    var hand = createTexturedHand(handFaces);
+var handFaces = createHandwFaces(1.4,2,6);
+var hand = createTexturedHand(handFaces);
 
-    hand.rotation.y = Math.PI;
-    hand.position.set(1,-1.2,1);
+hand.rotation.y = Math.PI;
+hand.position.set(1,-1.2,1);
 
 //nesting all the hadn details in the parent wholeHand object
-    wholeHand.add(hand);
-    wholeHand.add(shoulder);
-    wholeHand.add(handArm);
-    wholeHand.rotation.x= Math.PI*2 - Math.PI/6;
+wholeHand.add(hand);
+wholeHand.add(shoulder);
+wholeHand.add(handArm);
+wholeHand.rotation.x= Math.PI*2 - Math.PI/6;
 
-    return wholeHand;
-  }
+return wholeHand;
+}
 
 
 //This helper function creates habd faces to allow selective texture
 //mapping for the hand object
-  createHandwFaces = function(width, height, depth) {
-    var w = width, h = height, len = depth;
-    var handGeom = new THREE.Geometry();
+createHandwFaces = function(width, height, depth) {
+  var w = width, h = height, len = depth;
+  var handGeom = new THREE.Geometry();
     // add the front
    handGeom.vertices.push(new THREE.Vector3(0, 0, 0)); // vertex 0
    handGeom.vertices.push(new THREE.Vector3(w, 0, 0)); // vertex 1
@@ -522,14 +531,14 @@ arm.lineTo(1,-1.9);
   };
 
 // functions that help cuztomized texture mapping
-  function addTextureCoords(boxGeom, maxT, maxS) {
+function addTextureCoords(boxGeom, maxT, maxS) {
 
-    var UVs = [];
-    function faceCoords(as,at, bs,bt, cs,ct) {
-      UVs.push( [ new THREE.Vector2(as,at),
-        new THREE.Vector2(bs,bt),
-        new THREE.Vector2(cs,ct)] );
-    }
+  var UVs = [];
+  function faceCoords(as,at, bs,bt, cs,ct) {
+    UVs.push( [ new THREE.Vector2(as,at),
+      new THREE.Vector2(bs,bt),
+      new THREE.Vector2(cs,ct)] );
+  }
       // front
       faceCoords(0,0, maxS,0, maxS,maxT);
       faceCoords(0,0, maxS,maxT, 0,maxT);

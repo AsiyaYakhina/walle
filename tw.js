@@ -566,7 +566,7 @@ TW.cameraSetup = function (renderer,scene,scene_bb,inits) {
     var camParams = TW.cameraSetupParams(scene_bb,fovy);
     state.cameraParams = camParams;
     var near = 1;
-    var far = 300;
+    var far = 500;
     var camera = new THREE.PerspectiveCamera(fovy, canvas.clientWidth/canvas.clientHeight, near,far);
     state.cameraObject = camera
     scene.add(camera);
